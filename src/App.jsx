@@ -1,17 +1,21 @@
-import { useState } from 'react'
+import './index.css';
 
-import './App.css'
+import Navbar from './Components/Navbar';
+
 
 function App() {
-  const [count, setCount] = useState(0)
-
   return (
     <>
-    
-    <h1 className="italic">Porous Being</h1>
+    <Navbar />
+
+    <div className="flex justify-center items-center h-screen text-3xl font-light">
+      Home
+    </div>
 
     </>
-  )
+    
+    
+  );
 }
 
-export default App
+export default App;

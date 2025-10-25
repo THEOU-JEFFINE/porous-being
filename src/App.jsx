@@ -1,9 +1,10 @@
-import './index.css';
+import "./index.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 
-import Navbar from './Components/Navbar';
-import News from './Pages/News';
-import Projects from './Pages/Projects';
+import Navbar from "./Components/Navbar";
+import News from "./Pages/News";
+import Projects from "./Pages/Projects";
+import About from "./Pages/About";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <Routes>
         <Route path="/" element={<Projects />} /> {/* Home page */}
         <Route path="/news" element={<News />} />
+        <Route path="/about" element={<About />} />
       </Routes>
     </Router>
   );

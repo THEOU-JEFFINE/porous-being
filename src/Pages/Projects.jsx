@@ -1,10 +1,11 @@
+// src/Pages/Projects.jsx
 import React from "react";
-import ProjectGallery from "../Components/ProjectGallery";
+import ProjectList from "../Components/ProjectList";
 
 export default function Projects() {
   return (
-    <div className="mx-auto max-w-7xl px-4 py-8 md:px-6 md:py-12">
-      <ProjectGallery mode="inline" />
+    <div className="w-full">
+      <ProjectList />
     </div>
   );
 }

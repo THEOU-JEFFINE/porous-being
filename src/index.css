@@ -4,3 +4,14 @@
 body {
   font-family: "Inter", sans-serif;
 }
+.hide-scrollbar {
+  /* For Firefox */
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  /* For Chrome, Safari, and Opera */
+  display: none;
+  width: 0px; /* Ensures no space is left behind */
+  height: 0px;
+}

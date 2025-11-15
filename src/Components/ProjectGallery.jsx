@@ -3,9 +3,9 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 /**
  * ProjectGallery
  * - Renders a minimal thumbnail; clicking opens a fullscreen overlay with:
- *   - horizontally scrollable, snap-aligned image gallery (drag/scroll/swipe)
- *   - title + description column
- *   - fade-in animation, close button, optional prev/next arrows
+ * - horizontally scrollable, snap-aligned image gallery (drag/scroll/swipe)
+ * - title + description column
+ * - fade-in animation, close button, optional prev/next arrows
  * - Tailwind CSS required (already present in this repo)
  */
 export default function ProjectGallery({ data, mode = "modal" }) {
@@ -45,7 +45,7 @@ export default function ProjectGallery({ data, mode = "modal" }) {
     return () => document.body.classList.remove("overflow-hidden");
   }, [open]);
 
-  // Scroll to current index when it changes
+  // Scroll to current index when it changes (used in modal mode)
   useEffect(() => {
     if (!open) return;
     const el = galleryRef.current;
@@ -59,7 +59,7 @@ export default function ProjectGallery({ data, mode = "modal" }) {
       });
   }, [index, open]);
 
-  // Drag-to-scroll support for mouse users
+  // Drag-to-scroll support for mouse users (modal mode)
   const dragging = useRef({ down: false, startX: 0, scrollLeft: 0 });
   const onPointerDown = (e) => {
     const el = galleryRef.current;
@@ -112,7 +112,7 @@ export default function ProjectGallery({ data, mode = "modal" }) {
     el.releasePointerCapture?.(e.pointerId);
   };
 
-  // Sync active index to nearest snap after scroll settles
+  // Sync active index to nearest snap after scroll settles (modal mode)
   const scrollTimeout = useRef(null);
   const onScroll = () => {
     if (scrollTimeout.current) clearTimeout(scrollTimeout.current);
@@ -154,6 +154,7 @@ export default function ProjectGallery({ data, mode = "modal" }) {
           {expanded ? (
             <div
               ref={inlineRef}
+              // The width is calculated dynamically based on the number of images + 1 text panel
               className="hide-scrollbar h-full w-full snap-x snap-mandatory overflow-x-auto overflow-y-hidden cursor-grab active:cursor-grabbing"
               onPointerDown={onInlinePointerDown}
               onPointerMove={onInlinePointerMove}
@@ -161,20 +162,37 @@ export default function ProjectGallery({ data, mode = "modal" }) {
               onPointerCancel={onInlinePointerUp}
               onClick={(e) => e.stopPropagation()}
             >
-              <div className="flex h-full w-max items-stretch">
-                {/* Left panel: Image */}
-                <figure className="relative h-full w-full flex-none snap-start">
-                  <img
-                    src={sample.images[0]}
-                    alt={`${sample.title} — hero`}
-                    className="size-full object-cover"
-                    loading="lazy"
-                  />
-                  <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
-                </figure>
+              {/* This inner div needs to be wide enough to contain all slides */}
+              <div
+                // The w-max ensures it takes up the required width for all slides
+                className="flex h-full w-max items-stretch"
+                style={{
+                  width: `calc(100% * ${sample.images.length + 1})`,
+                }}
+              >
+                {/* Image slides */}
+                {sample.images.map((src, i) => (
+                  <figure
+                    key={i}
+                    // Each slide (image and text) should take up 100% of the parent container's visible width
+                    className="relative h-full w-[100vw] flex-none snap-start"
+                    style={{ width: `calc(100% / ${sample.images.length + 1})` }} // Set width to 1/N+1 of total width
+                  >
+                    <img
+                      src={src}
+                      alt={`${sample.title} — image ${i + 1}`}
+                      className="size-full object-cover"
+                      loading="lazy"
+                    />
+                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/25 via-transparent to-transparent" />
+                  </figure>
+                ))}
 
-                {/* Right panel: Text */}
-                <aside className="h-full w-full flex-none snap-start bg-white p-6 text-neutral-800 md:p-10">
+                {/* Right panel: Text (The last snap-aligned panel) */}
+                <aside
+                  className="h-full w-[100vw] flex-none snap-start bg-white p-6 text-neutral-800 md:p-10"
+                  style={{ width: `calc(100% / ${sample.images.length + 1})` }} // Set width to 1/N+1 of total width
+                >
                   <div className="mx-auto flex h-full max-w-prose flex-col justify-center gap-4">
                     <h3 className="text-2xl font-medium tracking-tight md:text-3xl">
                       {sample.title}
@@ -182,16 +200,16 @@ export default function ProjectGallery({ data, mode = "modal" }) {
                     <p className="text-sm leading-relaxed md:text-base">
                       {sample.description}
                     </p>
-                    <p className="text-xs text-neutral-500">
-                      Swipe or drag horizontally to read.
+                    <p className="text-xs text-neutral-500 mt-auto">
+                      Scroll horizontally to view all images and read the text. Click '✕' to collapse.
                     </p>
                   </div>
                 </aside>
               </div>
 
-              {/* Index chip */}
+              {/* Index chip (Simplified for inline mode) */}
               <div className="pointer-events-none absolute bottom-3 right-3 z-10 rounded-full bg-black/50 px-2 py-1 text-xs text-white backdrop-blur-sm dark:bg-white/20 dark:text-white">
-                1 / 2
+                View Gallery
               </div>
             </div>
           ) : (
@@ -249,7 +267,7 @@ export default function ProjectGallery({ data, mode = "modal" }) {
         </button>
       )}
 
-      {/* Overlay modal */}
+      {/* Overlay modal (No change needed here) */}
       {mode === "modal" && open && (
         <div
           role="dialog"
@@ -274,14 +292,16 @@ export default function ProjectGallery({ data, mode = "modal" }) {
                 <button
                   aria-label="Previous image"
                   onClick={prev}
-                  className="pointer-events-auto rounded-full bg-white/70 p-2 text-neutral-900 shadow-sm ring-1 ring-black/10 transition hover:bg-white dark:bg-neutral-900/70 dark:text-white dark:ring-white/10 dark:hover:bg-neutral-900"
+                  disabled={index === 0}
+                  className="pointer-events-auto rounded-full bg-white/70 p-2 text-neutral-900 shadow-sm ring-1 ring-black/10 transition hover:bg-white disabled:opacity-30 dark:bg-neutral-900/70 dark:text-white dark:ring-white/10 dark:hover:bg-neutral-900 dark:disabled:opacity-30"
                 >
                   ←
                 </button>
                 <button
                   aria-label="Next image"
                   onClick={next}
-                  className="pointer-events-auto rounded-full bg-white/70 p-2 text-neutral-900 shadow-sm ring-1 ring-black/10 transition hover:bg-white dark:bg-neutral-900/70 dark:text-white dark:ring-white/10 dark:hover:bg-neutral-900"
+                  disabled={index === sample.images.length - 1}
+                  className="pointer-events-auto rounded-full bg-white/70 p-2 text-neutral-900 shadow-sm ring-1 ring-black/10 transition hover:bg-white disabled:opacity-30 dark:bg-neutral-900/70 dark:text-white dark:ring-white/10 dark:hover:bg-neutral-900 dark:disabled:opacity-30"
                 >
                   →
                 </button>

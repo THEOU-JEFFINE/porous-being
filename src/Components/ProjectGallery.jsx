@@ -176,7 +176,9 @@ export default function ProjectGallery({ data, mode = "modal" }) {
                     key={i}
                     // Each slide (image and text) should take up 100% of the parent container's visible width
                     className="relative h-full w-[100vw] flex-none snap-start"
-                    style={{ width: `calc(100% / ${sample.images.length + 1})` }} // Set width to 1/N+1 of total width
+                    style={{
+                      width: `calc(100% / ${sample.images.length + 1})`,
+                    }} // Set width to 1/N+1 of total width
                   >
                     <img
                       src={src}
@@ -201,7 +203,8 @@ export default function ProjectGallery({ data, mode = "modal" }) {
                       {sample.description}
                     </p>
                     <p className="text-xs text-neutral-500 mt-auto">
-                      Scroll horizontally to view all images and read the text. Click '✕' to collapse.
+                      Scroll horizontally to view all images and read the text.
+                      Click '✕' to collapse.
                     </p>
                   </div>
                 </aside>

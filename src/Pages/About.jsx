@@ -33,7 +33,7 @@ export default function About() {
   return (
     <div className="min-h-screen bg-white">
       {/* Main content container */}
-      <div className="max-w-7xl mx-auto lg:ml-30 px-4 sm:px-6 lg:px-8 py-8 sm:py-12 lg:py-20">
+      <div className="max-w-7xl mx-auto lg:ml-30 px-4 sm:px-10 lg:px-30 py-8 sm:py-12 lg:py-20">
         {/* Large "ABOUT" heading */}
         <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-black mb-6 sm:mb-8 lg:mb-10">
           ABOUT
@@ -44,47 +44,35 @@ export default function About() {
           {/* Left Column */}
           <div className="space-y-6 lg:space-y-8">
             <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-              The escalating complexity of the world and the accelerating speed
-              of change exceed any individual's capacity to comprehend. For
-              architects operating today, the Golden Ratio is no longer the
-              standard - rather, the UN's 17 Sustainable Development Goals are.
-              From a single elegant equation, architects are now held to
-              multidimensional success criteria with almost infinite variables.
+              At Porous Being, we translate thye philosophy of porosity into
+              built environments that live, breathe, and evolve. It is our
+              commitment to create spaces that are open, responsive and
+              generative.
             </p>
 
             <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-              Since sustainability is inherently a question of complex systems,
-              circular design, and holistic thinking, no single person holds the
-              solution. As architects and urbanists, we must team with
-              scientists, engineers with biologists, politicians with
-              entrepreneurs, to combine skill sets and perspectives, knowledge
-              and sensibility, to match the complexity of the challenges we
-              face. As future formgivers, we won't be defined by our individual
-              talents or singular skill sets - but rather by our capacity to
-              pool the skills of the many to give our future form.
+              To design porously is to resist excess and allow space for naure
+              to settle -to shape not just enclosures, but invitations to engage
+              with your surroundings, in all their living, non-living, and
+              silent forms. It is a refusal to see architecture as a finished
+              product, but rather as an emerging ecosystem.
             </p>
           </div>
 
           {/* Right Column */}
           <div className="space-y-6 lg:space-y-8">
             <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-              BIG has grown organically over the last two decades from a
-              founder, to a family, to a force of 700. Our latest transformation
-              is the BIG LEAP: Bjarke Ingels Group of Landscape, Engineering,
-              Architecture, Planning and Products. A plethora of in-house
-              perspectives allows us to see what none of us would be able to see
-              on our own. The sum of our individual talents becomes our
-              collective creative genius. A small step for each of us becomes a
-              BIG LEAP for all of us.
+              Porous Being is a process of resistance to isolation, over
+              definition and sealed systems.
             </p>
 
             {/* Signature section */}
             <div className="pt-2">
               <p className="text-base lg:text-lg font-semibold text-black font-sans">
-                Bjarke Ingels
+                Udhayarajan N, B.Arch
               </p>
               <p className="text-base lg:text-lg text-gray-700 font-sans">
-                Founder & Creative Director
+                Founder & Principal Architect
               </p>
             </div>
           </div>

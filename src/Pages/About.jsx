@@ -1,10 +1,23 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
+import { gsap } from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
+
+gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
   const scrollContainerRef = useRef(null);
   const isDragging = useRef(false);
   const startX = useRef(0);
   const scrollLeft = useRef(0);
+
+  const titleRef = useRef(null);
+  const leftColumnRef = useRef(null);
+  const rightColumnRef = useRef(null);
+  const mainImageRef = useRef(null);
+  const landscapeTitleRef = useRef(null);
+  const landscapeLeftRef = useRef(null);
+  const landscapeRightRef = useRef(null);
+  const galleryItemsRef = useRef([]);
 
   const handleMouseDown = (e) => {
     isDragging.current = true;
@@ -30,19 +43,122 @@ export default function About() {
     const walk = (x - startX.current) * 2;
     scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
   };
+
+  useEffect(() => {
+    const ctx = gsap.context(() => {
+      // Title animation
+      gsap.from(titleRef.current, {
+        y: 80,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power4.out"
+      });
+
+      // Left column paragraphs stagger
+      gsap.from(leftColumnRef.current.children, {
+        x: -60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        delay: 0.3
+      });
+
+      // Right column content
+      gsap.from(rightColumnRef.current.children, {
+        x: 60,
+        opacity: 0,
+        duration: 1,
+        stagger: 0.2,
+        ease: "power3.out",
+        delay: 0.5
+      });
+
+      // Main image reveal
+      gsap.from(mainImageRef.current, {
+        scale: 0.8,
+        opacity: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: mainImageRef.current,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Landscape section title
+      gsap.from(landscapeTitleRef.current, {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: landscapeTitleRef.current,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Landscape columns
+      gsap.from(landscapeLeftRef.current, {
+        x: -50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: landscapeLeftRef.current,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      gsap.from(landscapeRightRef.current, {
+        x: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: landscapeRightRef.current,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Gallery items stagger animation
+      galleryItemsRef.current.forEach((item, index) => {
+        if (item) {
+          gsap.from(item, {
+            y: 60,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power2.out",
+            scrollTrigger: {
+              trigger: item,
+              start: "top bottom-=50",
+              toggleActions: "play none none reverse"
+            }
+          });
+        }
+      });
+    });
+
+    return () => ctx.revert();
+  }, []);
+
   return (
     <div className="min-h-screen bg-white">
       {/* Main content container */}
       <div className="max-w-7xl mx-auto lg:ml-30 px-4 sm:px-10 lg:px-30 py-8 sm:py-12 lg:py-20">
         {/* Large "ABOUT" heading */}
-        <h1 className="text-3xl sm:text-4xl lg:text-5xl font-normal text-black mb-6 sm:mb-8 lg:mb-10">
+        <h1 ref={titleRef} className="text-3xl sm:text-4xl lg:text-5xl font-normal text-black mb-6 sm:mb-8 lg:mb-10">
           ABOUT
         </h1>
 
         {/* Two-column grid layout */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
           {/* Left Column */}
-          <div className="space-y-6 lg:space-y-8">
+          <div ref={leftColumnRef} className="space-y-6 lg:space-y-8">
             <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
               At Porous Being, we translate thye philosophy of porosity into
               built environments that live, breathe, and evolve. It is our
@@ -60,7 +176,7 @@ export default function About() {
           </div>
 
           {/* Right Column */}
-          <div className="space-y-6 lg:space-y-8">
+          <div ref={rightColumnRef} className="space-y-6 lg:space-y-8">
             <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
               Porous Being is a process of resistance to isolation, over
               definition and sealed systems.
@@ -81,6 +197,7 @@ export default function About() {
         {/* Image section */}
         <div className="mt-10 sm:mt-16 lg:mt-20">
           <img
+            ref={mainImageRef}
             src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870"
             alt="Architecture"
             className="w-full h-48 sm:h-64 lg:h-96 rounded-none object-cover"
@@ -89,13 +206,13 @@ export default function About() {
 
         {/*one by onw topics*/}
         <div>
-          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mt-8 sm:mt-10 lg:mt-12 mb-4 sm:mb-5">
+          <h1 ref={landscapeTitleRef} className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mt-8 sm:mt-10 lg:mt-12 mb-4 sm:mb-5">
             LANDSCAPE
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
             {/* Left Column */}
-            <div className="space-y-6 lg:space-y-8">
+            <div ref={landscapeLeftRef} className="space-y-6 lg:space-y-8">
               <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
                 As public space and biodiversity are subtracted in urban spaces,
                 BIG Landscape works with architects and other disciplines to
@@ -108,7 +225,7 @@ export default function About() {
             </div>
 
             {/* Right Column */}
-            <div className="space-y-6 lg:space-y-8">
+            <div ref={landscapeRightRef} className="space-y-6 lg:space-y-8">
               <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
                 Our work not only responds to challenges today, it mitigates
                 challenges of the future: we approach every project as an
@@ -144,14 +261,14 @@ export default function About() {
               className="flex gap-4 sm:gap-6 lg:gap-8"
               style={{ minWidth: "fit-content" }}>
               {/* PUBLIC REALM + */}
-              <div className="flex-shrink-0 w-64 sm:w-80 lg:w-96">
+              <div ref={(el) => (galleryItemsRef.current[0] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
                   style={{ border: "none" }}>
                   <img
                     src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
                     alt="Public Realm"
-                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none"
+                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
@@ -163,14 +280,14 @@ export default function About() {
               </div>
 
               {/* PARKS + */}
-              <div className="flex-shrink-0 w-64 sm:w-80 lg:w-96">
+              <div ref={(el) => (galleryItemsRef.current[1] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
                   style={{ border: "none" }}>
                   <img
                     src="https://plus.unsplash.com/premium_photo-1732835620501-116098579418?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=464"
                     alt="Parks"
-                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none"
+                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
@@ -182,14 +299,14 @@ export default function About() {
               </div>
 
               {/* GARDENS + */}
-              <div className="flex-shrink-0 w-64 sm:w-80 lg:w-96">
+              <div ref={(el) => (galleryItemsRef.current[2] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
                   style={{ border: "none" }}>
                   <img
                     src="https://plus.unsplash.com/premium_photo-1739452120449-9f79dc47a62e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870"
                     alt="Gardens"
-                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none"
+                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">

@@ -45,6 +45,32 @@ export default function HorizontalScrollGalleryExample() {
   const [active, setActive] = React.useState(false);
   const [scrolled, setScrolled] = React.useState(false);
 
+  // Preload critical images (first image + logo) to improve perceived load time
+  React.useEffect(() => {
+    if (!projectItems || projectItems.length === 0) return;
+    const first = projectItems[0];
+    const links = [];
+    // preload first image
+    if (first && first.src) {
+      const l = document.createElement("link");
+      l.rel = "preload";
+      l.as = "image";
+      l.href = first.src;
+      document.head.appendChild(l);
+      links.push(l);
+    }
+    // preload logo
+    if (logo45) {
+      const l2 = document.createElement("link");
+      l2.rel = "preload";
+      l2.as = "image";
+      l2.href = logo45;
+      document.head.appendChild(l2);
+      links.push(l2);
+    }
+    return () => links.forEach((n) => n.parentNode?.removeChild(n));
+  }, [projectItems]);
+
   // Handler to detect horizontal scroll
   const handleScroll = (e) => {
     if (!scrolled && e.target.scrollLeft > 10) {

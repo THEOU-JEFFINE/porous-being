@@ -66,7 +66,6 @@ export default function HorizontalScrollGallery({
 
   // If intro is provided, add it as the first item
   const galleryItems = intro ? [intro, ...items] : items;
-  const totalItems = galleryItems.length;
 
   return (
     <div className={`relative ${height} w-full overflow-hidden ${className}`}>
@@ -81,7 +80,7 @@ export default function HorizontalScrollGallery({
       >
         <div
           className="flex h-full items-stretch gap-0"
-          style={{ width: `${totalItems * 100}%` }}
+          style={{ width: "auto" }}
         >
           {galleryItems.map((item, index) => (
             <div
@@ -233,7 +232,8 @@ export default function HorizontalScrollGallery({
                     src={item.src}
                     alt={item.alt || `Image ${index + 1}`}
                     className="h-full object-cover"
-                    loading="lazy"
+                    loading={index === 0 ? "eager" : "lazy"}
+                    fetchpriority={index === 0 ? "high" : undefined}
                   />
                 </figure>
               ) : item.type === "text" ? (

@@ -166,7 +166,7 @@ export default function About() {
               generative.
             </p>
 
-            <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
+            <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-light">
               To design porously is to resist excess and allow space for naure
               to settle -to shape not just enclosures, but invitations to engage
               with your surroundings, in all their living, non-living, and
@@ -184,10 +184,10 @@ export default function About() {
 
             {/* Signature section */}
             <div className="pt-2">
-              <p className="text-base lg:text-lg font-semibold text-black font-sans">
+              <p className="text-base lg:text-lg font-light text-black">
                 Udhayarajan N, B.Arch
               </p>
-              <p className="text-base lg:text-lg text-gray-700 font-sans">
+              <p className="text-base lg:text-lg text-gray-700 font-light">
                 Founder & Principal Architect
               </p>
             </div>
@@ -249,7 +249,8 @@ export default function About() {
               overflowX: "scroll",
               scrollbarWidth: "none",
               msOverflowStyle: "none",
-            }}>
+            }}
+          >
             <style>
               {`
               div::-webkit-scrollbar {
@@ -259,12 +260,14 @@ export default function About() {
             </style>
             <div
               className="flex gap-4 sm:gap-6 lg:gap-8"
-              style={{ minWidth: "fit-content" }}>
+              style={{ minWidth: "fit-content" }}
+            >
               {/* PUBLIC REALM + */}
               <div ref={(el) => (galleryItemsRef.current[0] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
-                  style={{ border: "none" }}>
+                  style={{ border: "none" }}
+                >
                   <img
                     src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
                     alt="Public Realm"
@@ -273,7 +276,7 @@ export default function About() {
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
                   <div className="w-2 h-2 bg-black mr-2"></div>
-                  <p className="text-base sm:text-lg font-normal text-black font-sans">
+                  <p className="text-base sm:text-lg font-light text-black">
                     PUBLIC REALM +
                   </p>
                 </div>
@@ -283,7 +286,8 @@ export default function About() {
               <div ref={(el) => (galleryItemsRef.current[1] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
-                  style={{ border: "none" }}>
+                  style={{ border: "none" }}
+                >
                   <img
                     src="https://plus.unsplash.com/premium_photo-1732835620501-116098579418?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=464"
                     alt="Parks"
@@ -292,7 +296,7 @@ export default function About() {
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
                   <div className="w-2 h-2 bg-black mr-2"></div>
-                  <p className="text-base sm:text-lg font-normal text-black font-sans">
+                  <p className="text-base sm:text-lg font-light text-black">
                     PARKS +
                   </p>
                 </div>
@@ -302,7 +306,8 @@ export default function About() {
               <div ref={(el) => (galleryItemsRef.current[2] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
-                  style={{ border: "none" }}>
+                  style={{ border: "none" }}
+                >
                   <img
                     src="https://plus.unsplash.com/premium_photo-1739452120449-9f79dc47a62e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870"
                     alt="Gardens"
@@ -311,7 +316,7 @@ export default function About() {
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
                   <div className="w-2 h-2 bg-black mr-2"></div>
-                  <p className="text-base sm:text-lg font-normal text-black font-sans">
+                  <p className="text-base sm:text-lg font-light text-black">
                     GARDENS +
                   </p>
                 </div>

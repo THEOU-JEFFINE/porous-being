@@ -56,6 +56,83 @@ const imgs_unbuilt_madurai = loadImages(
 );
 
 const componentData = [
+  // First 3: Rukmini Residence, Greenways Residential, Kanyakumari Bridge
+  {
+    key: "res-rukmini",
+    title: "Rukmini Residence",
+    location: "Hill Station",
+    year: "2022",
+    typology: "RESIDENTIAL",
+    size: "420 m²",
+    status: "BUILT",
+    images: imgs_res_rukmini,
+    textAreas: [
+      {
+        subtitle: "BRIEF",
+        texts: [
+          "A residence responding to sloping topography and views across the valley.",
+        ],
+      },
+    ],
+    shareIcons: [
+      { href: "mailto:?subject=Rukmini%20Residence", name: "email" },
+      { href: "#", name: "Facebook" },
+      { href: "#", name: "Linkedin" },
+      { href: "#", name: "Twitter" },
+    ],
+  },
+
+  {
+    key: "res-greenways",
+    title: "Greenways Residential",
+    location: "Coastal Region",
+    year: "2025",
+    typology: "RESIDENTIAL",
+    size: "—",
+    status: "DESIGN",
+    images: imgs_res_greenways,
+    textAreas: [
+      {
+        subtitle: "OVERVIEW",
+        texts: [
+          "A small cluster of homes designed around shared green corridors and sustainable passive strategies.",
+        ],
+      },
+    ],
+    shareIcons: [
+      { href: "mailto:?subject=Greenways", name: "email" },
+      { href: "#", name: "Facebook" },
+      { href: "#", name: "Linkedin" },
+      { href: "#", name: "Twitter" },
+    ],
+  },
+
+  {
+    key: "unbuilt-kanyakumari",
+    title: "Kanyakumari Bridge",
+    location: "Kanyakumari, INDIA",
+    year: "2020",
+    typology: "UNBUILT",
+    size: "—",
+    status: "PROPOSAL",
+    images: imgs_unbuilt_kanyakumari,
+    textAreas: [
+      {
+        subtitle: "CONCEPT",
+        texts: [
+          "A conceptual bridge exploring structural expression and public accessibility.",
+        ],
+      },
+    ],
+    shareIcons: [
+      { href: "mailto:?subject=Kanyakumari%20Bridge", name: "email" },
+      { href: "#", name: "Facebook" },
+      { href: "#", name: "Linkedin" },
+      { href: "#", name: "Twitter" },
+    ],
+  },
+
+  // Remaining projects
   {
     key: "experience-centre",
     title: "Thazhambur Lake — Experience Centre",
@@ -183,31 +260,6 @@ const componentData = [
   },
 
   {
-    key: "res-greenways",
-    title: "Greenways Residential",
-    location: "Coastal Region",
-    year: "2025",
-    typology: "RESIDENTIAL",
-    size: "—",
-    status: "DESIGN",
-    images: imgs_res_greenways,
-    textAreas: [
-      {
-        subtitle: "OVERVIEW",
-        texts: [
-          "A small cluster of homes designed around shared green corridors and sustainable passive strategies.",
-        ],
-      },
-    ],
-    shareIcons: [
-      { href: "mailto:?subject=Greenways", name: "email" },
-      { href: "#", name: "Facebook" },
-      { href: "#", name: "Linkedin" },
-      { href: "#", name: "Twitter" },
-    ],
-  },
-
-  {
     key: "res-45-degree",
     title: "Residential — 45 Degree",
     location: "Unknown",
@@ -259,31 +311,6 @@ const componentData = [
   },
 
   {
-    key: "res-rukmini",
-    title: "Rukmini Residence",
-    location: "Hill Station",
-    year: "2022",
-    typology: "RESIDENTIAL",
-    size: "420 m²",
-    status: "BUILT",
-    images: imgs_res_rukmini,
-    textAreas: [
-      {
-        subtitle: "BRIEF",
-        texts: [
-          "A residence responding to sloping topography and views across the valley.",
-        ],
-      },
-    ],
-    shareIcons: [
-      { href: "mailto:?subject=Rukmini%20Residence", name: "email" },
-      { href: "#", name: "Facebook" },
-      { href: "#", name: "Linkedin" },
-      { href: "#", name: "Twitter" },
-    ],
-  },
-
-  {
     key: "retail-annapoorna",
     title: "Annapoorna Masala — Retail",
     location: "Market Street",
@@ -302,31 +329,6 @@ const componentData = [
     ],
     shareIcons: [
       { href: "mailto:?subject=Annapoorna%20Masala", name: "email" },
-      { href: "#", name: "Facebook" },
-      { href: "#", name: "Linkedin" },
-      { href: "#", name: "Twitter" },
-    ],
-  },
-
-  {
-    key: "unbuilt-kanyakumari",
-    title: "Kanyakumari Bridge",
-    location: "Kanyakumari, INDIA",
-    year: "2020",
-    typology: "UNBUILT",
-    size: "—",
-    status: "PROPOSAL",
-    images: imgs_unbuilt_kanyakumari,
-    textAreas: [
-      {
-        subtitle: "CONCEPT",
-        texts: [
-          "A conceptual bridge exploring structural expression and public accessibility.",
-        ],
-      },
-    ],
-    shareIcons: [
-      { href: "mailto:?subject=Kanyakumari%20Bridge", name: "email" },
       { href: "#", name: "Facebook" },
       { href: "#", name: "Linkedin" },
       { href: "#", name: "Twitter" },

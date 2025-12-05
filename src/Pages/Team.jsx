@@ -8,18 +8,18 @@ gsap.registerPlugin(ScrollTrigger);
 export default function Teams() {
   const people = [
     {
-      name: "N. Udhayarajan",
+      name: "N. Udhayarajan, B.Arch",
       role: "Principal Architect",
       location: "Chennai",
       image: img1,
-      bio: "Udhayarajan is an architect with over 14 years of experience in architecture and urban design. His work spans large-scale government projects, institutional buildings, community housing, and ecological urban strategies. His expertise lies in institutional buildings and community housing, with a strong emphasis on conceptualizing spatial design within the frameworks of sustainability and urban governance. He began his career with IL&FS EcoSmart, working on the Eco Restoration Plan for the Adyar Creek and Estuary (300 acres). He served as one of the Project Architects for the Indian National War Memorial, New Delhi, inaugurated by the Hon. Prime Minister of India. Udhayarajan is currently the founder and principal of Porous Being, a design practice exploring the intersection of spatial design, ecology, and urbanism. He also leads the Uvakai Research Foundation, a think tank working on water, environment, governance, and community well-being."
+      bio: "Udhayarajan is an architect with over 14 years of experience in architecture and urban design. His work spans large-scale government projects, institutional buildings, community housing, and ecological urban strategies.\n\nHis expertise lies in institutional buildings and community housing, with a strong emphasis on conceptualizing spatial design within the frameworks of sustainability and urban governance. His work blends ecological sensitivity with contextual clarity, reflecting a deep commitment to creating spaces that are both functional and transformative.\n\nHe began his career with IL&FS EcoSmart, working on the Eco Restoration Plan for the Adyar Creek and Estuary (300 acres), and later collaborated with the Transportation Department at Anna University on bus terminal designs in Chennai.\n\nAs co-founder of WEBE Design Lab, he led several notable urban projects, including the North Usman Road footpath design for Chennai Smart City and green strategy proposals for Ambattur Ward in partnership with Care Earth Trust.\n\nHe worked with GIZ India to conceptualize a design competition on the future of Buckingham Canal, and served as one of the Project Architects for the Indian National War Memorial, New Delhi, inaugurated by the Hon. Prime Minister of India. He also led the design of the Water Matters exhibition in collaboration with the American Consulate Chennai, Care Earth Trust, and the Smithsonian Institution.\n\nUdhayarajan is currently the founder and principal of Porous Being, a design practice exploring the intersection of spatial design, ecology, and urbanism. He also leads the Uvakai Research Foundation, a think tank working on water, environment, governance, and community well-being."
     },
     {
-      name: "Suresh Kumar J",
+      name: "Suresh Kumar J, M.Arch, MSc Project Management (NUS)",
       role: "Project Director",
       location: "Chennai",
       image: img1,
-      bio: "Suresh J is a seasoned project management professional with over 15 years of experience in the construction and real estate industry. His career spans both Indian and international contexts, including significant roles in Singapore and across South India, where he has managed large-scale commercial, institutional, and residential developments. His expertise lies in end-to-end project planning, site due diligence, approval drawings, and design coordination. Suresh has worked with firms such as MARG Ltd., Studio 7 Consultants, Chennai Engineers & Contractors, and Logistics Construction Pvt. Ltd. (Singapore). He has also led design and build initiatives for high-density residential developments, delivering several hundred apartment units across Chennai."
+      bio: "Suresh J is a seasoned project management professional with over 15 years of experience in the construction and real estate industry. His career spans both Indian and international contexts, including significant roles in Singapore and across South India, where he has managed large-scale commercial, institutional, and residential developments.\n\nHis expertise lies in end-to-end project planning, site due diligence, approval drawings, and design coordination. His ability to streamline execution across various project scales has made him a reliable consultant for both private developers and corporate clients.\n\nSuresh has worked with firms such as MARG Ltd., Studio 7 Consultants, Chennai Engineers & Contractors, and Logistics Construction Pvt. Ltd. (Singapore). These experiences have equipped him with specialized skills in handling SEZ plotting, particularly for light engineering industries, customizing infrastructure as per diverse industrial requirements.\n\nHe has also led design and build initiatives for high-density residential developments, delivering several hundred apartment units across Chennai. His in-depth understanding of construction ecosystems, regulatory processes, and interdisciplinary collaboration makes him a valuable asset in delivering projects that are efficient, compliant, and contextually grounded."
     },
   ];
 
@@ -149,10 +149,10 @@ export default function Teams() {
           ))}
         </div>
 
-        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 pr-4 lg:pr-8">
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-16 xl:gap-20 pr-4 lg:pr-8">
 
           {/* CENTER PEOPLE LIST */}
-          <div className="flex-1 max-w-md">
+          <div className="flex-1 max-w-sm lg:max-w-md">
             <div className="lg:h-[65vh] overflow-y-auto pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: '#d1d5db transparent' }}>
               {people.map((p, idx) => (
                 <div
@@ -182,9 +182,11 @@ export default function Teams() {
                     <p className="text-gray-600 text-sm mb-3">
                       {p.role}, {p.location}
                     </p>
-                    <p className="text-gray-700 text-sm leading-relaxed">
-                      {p.bio}
-                    </p>
+                    <div className="text-gray-700 text-sm leading-relaxed space-y-3">
+                      {p.bio.split('\n\n').map((paragraph, i) => (
+                        <p key={i}>{paragraph}</p>
+                      ))}
+                    </div>
                   </div>
                 </div>
               ))}
@@ -192,21 +194,23 @@ export default function Teams() {
           </div>
 
           {/* RIGHT IMAGE PREVIEW - Desktop Only */}
-          <div ref={imageContainerRef} className="hidden lg:block flex-1 max-w-2xl" style={{ opacity: 0, transform: 'translateX(100px)' }}>
+          <div ref={imageContainerRef} className="hidden lg:block flex-[3]" style={{ opacity: 0, transform: 'translateX(100px)' }}>
             <img
               src={people[activePerson].image}
               alt={people[activePerson].name}
-              className="w-full h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl"
+              className="w-full max-w-2xl h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl"
             />
 
-            <div className="mt-6">
+            <div className="mt-6 max-w-2xl">
               <h2 className="text-2xl font-semibold mb-2">{people[activePerson].name}</h2>
               <p className="text-gray-600 text-base mb-4">
                 {people[activePerson].role}, {people[activePerson].location}
               </p>
-              <p className="text-gray-700 text-sm leading-relaxed">
-                {people[activePerson].bio}
-              </p>
+              <div className="text-gray-700 text-sm leading-relaxed space-y-3">
+                {people[activePerson].bio.split('\n\n').map((paragraph, i) => (
+                  <p key={i}>{paragraph}</p>
+                ))}
+              </div>
             </div>
           </div>
         </div>

@@ -267,6 +267,8 @@ function ProjectGalleryWrapper({ project, isActive, isScrolled, onSetActive, onS
       }
     : null;
 
+  const firstImage = projectImages[0] || null;
+
   if (!projectItems || projectItems.length === 0) {
     return (
       <div className="w-[400px] h-[250px] bg-gray-200 flex items-center justify-center cursor-pointer rounded">
@@ -278,6 +280,71 @@ function ProjectGalleryWrapper({ project, isActive, isScrolled, onSetActive, onS
     );
   }
 
+  // When not active: show card layout (info left, centered image right)
+  if (!isActive) {
+    return (
+      <div
+        className="flex items-start justify-center py-10 md:py-14 cursor-pointer group w-full"
+        onClick={onSetActive}
+      >
+        {/* Left side - Project info (right-aligned text) */}
+        <div className="hidden md:flex flex-col items-end text-right w-[200px] lg:w-[220px] shrink-0 pr-8 lg:pr-12">
+          {/* Logo/Icon */}
+          {project.logo ? (
+            <div className="w-10 h-10 lg:w-12 lg:h-12 mb-2">
+              <img
+                src={project.logo}
+                alt={project.title}
+                className="w-full h-full object-contain"
+              />
+            </div>
+          ) : (
+            <div className="w-10 h-10 lg:w-12 lg:h-12 mb-2 bg-gray-900 flex items-center justify-center">
+              <span className="text-white text-xs font-bold">
+                {project.title.charAt(0)}
+              </span>
+            </div>
+          )}
+
+          {/* Title */}
+          <h3 className="text-sm lg:text-base font-medium text-gray-900 mb-1 leading-tight">
+            {project.title}
+          </h3>
+
+          {/* Location */}
+          <p className="text-[10px] lg:text-xs text-gray-400 uppercase tracking-wider">
+            {project.location}
+          </p>
+        </div>
+
+        {/* Center - Image */}
+        <div className="w-full md:w-[450px] lg:w-[500px] xl:w-[550px] overflow-hidden">
+          {firstImage ? (
+            <img
+              src={firstImage}
+              alt={project.title}
+              className="w-full h-[220px] md:h-[260px] lg:h-[300px] object-cover transition-transform duration-500 group-hover:scale-105"
+            />
+          ) : (
+            <div className="w-full h-[220px] md:h-[260px] lg:h-[300px] bg-gray-200 flex items-center justify-center">
+              <p className="text-gray-400">No image available</p>
+            </div>
+          )}
+
+          {/* Mobile: Title below image */}
+          <div className="md:hidden mt-3 text-center">
+            <h3 className="text-sm font-medium text-gray-900 mb-1">{project.title}</h3>
+            <p className="text-[10px] text-gray-400 uppercase tracking-wider">{project.location}</p>
+          </div>
+        </div>
+
+        {/* Right spacer for centering */}
+        <div className="hidden md:block w-[200px] lg:w-[220px] shrink-0"></div>
+      </div>
+    );
+  }
+
+  // When active: show expanded gallery
   return (
     <div className="w-full flex flex-col items-center gap-4 py-8">
       <div
@@ -285,17 +352,41 @@ function ProjectGalleryWrapper({ project, isActive, isScrolled, onSetActive, onS
         className={`transition-all duration-500 ease-in-out rounded ${
           isScrolled
             ? "fixed inset-0 w-screen h-screen z-50 overflow-x-auto rounded-none"
-            : isActive
-            ? "w-screen h-[500px] relative z-40"
-            : "w-[400px] h-[250px] relative z-40 cursor-pointer hover:opacity-80"
+            : "w-screen h-[500px] relative z-40"
         }`}
-        onClick={() => !isActive && onSetActive()}
       >
         <HorizontalScrollGallery
           items={projectItems}
-          height={isScrolled ? "h-screen" : isActive ? "h-[500px]" : "h-[250px]"}
+          height={isScrolled ? "h-screen" : "h-[500px]"}
           intro={intro}
         />
+
+        {/* Close button when expanded */}
+        {isScrolled && (
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              onSetActive(); // This will toggle off
+            }}
+            className="fixed top-6 right-6 z-[60] w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="text-gray-700 group-hover:text-black transition-colors"
+            >
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
+          </button>
+        )}
       </div>
     </div>
   );

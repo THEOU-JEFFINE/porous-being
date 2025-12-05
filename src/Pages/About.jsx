@@ -14,9 +14,12 @@ export default function About() {
   const leftColumnRef = useRef(null);
   const rightColumnRef = useRef(null);
   const mainImageRef = useRef(null);
-  const landscapeTitleRef = useRef(null);
-  const landscapeLeftRef = useRef(null);
-  const landscapeRightRef = useRef(null);
+  const scopeTitleRef = useRef(null);
+  const scopeLeftRef = useRef(null);
+  const scopeRightRef = useRef(null);
+  const teamSectionRef = useRef(null);
+  const principalRef = useRef(null);
+  const directorRef = useRef(null);
   const galleryItemsRef = useRef([]);
 
   const handleMouseDown = (e) => {
@@ -87,39 +90,78 @@ export default function About() {
         }
       });
 
-      // Landscape section title
-      gsap.from(landscapeTitleRef.current, {
+      // Scope section title
+      gsap.from(scopeTitleRef.current, {
         y: 50,
         opacity: 0,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: landscapeTitleRef.current,
+          trigger: scopeTitleRef.current,
           start: "top bottom-=100",
           toggleActions: "play none none reverse"
         }
       });
 
-      // Landscape columns
-      gsap.from(landscapeLeftRef.current, {
+      // Scope columns
+      gsap.from(scopeLeftRef.current, {
         x: -50,
         opacity: 0,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: landscapeLeftRef.current,
+          trigger: scopeLeftRef.current,
           start: "top bottom-=100",
           toggleActions: "play none none reverse"
         }
       });
 
-      gsap.from(landscapeRightRef.current, {
+      gsap.from(scopeRightRef.current, {
         x: 50,
         opacity: 0,
         duration: 1,
         ease: "power3.out",
         scrollTrigger: {
-          trigger: landscapeRightRef.current,
+          trigger: scopeRightRef.current,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Team section
+      gsap.from(teamSectionRef.current, {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: teamSectionRef.current,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Principal section
+      gsap.from(principalRef.current, {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: principalRef.current,
+          start: "top bottom-=100",
+          toggleActions: "play none none reverse"
+        }
+      });
+
+      // Director section
+      gsap.from(directorRef.current, {
+        y: 50,
+        opacity: 0,
+        duration: 1,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: directorRef.current,
           start: "top bottom-=100",
           toggleActions: "play none none reverse"
         }
@@ -150,9 +192,9 @@ export default function About() {
     <div className="min-h-screen bg-white">
       {/* Main content container */}
       <div className="max-w-7xl mx-auto lg:ml-30 px-4 sm:px-10 lg:px-30 py-8 sm:py-12 lg:py-20">
-        {/* Large "ABOUT" heading */}
+        {/* Large "PHILOSOPHY" heading */}
         <h1 ref={titleRef} className="text-3xl sm:text-4xl lg:text-5xl font-normal text-black mb-6 sm:mb-8 lg:mb-10">
-          ABOUT
+          PHILOSOPHY
         </h1>
 
         {/* Two-column grid layout */}
@@ -160,15 +202,15 @@ export default function About() {
           {/* Left Column */}
           <div ref={leftColumnRef} className="space-y-6 lg:space-y-8">
             <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-              At Porous Being, we translate thye philosophy of porosity into
+              At Porous Being, we translate the philosophy of porosity into
               built environments that live, breathe, and evolve. It is our
               commitment to create spaces that are open, responsive and
               generative.
             </p>
 
             <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-light">
-              To design porously is to resist excess and allow space for naure
-              to settle -to shape not just enclosures, but invitations to engage
+              To design porously is to resist excess and allow space for nature
+              to settle - to shape not just enclosures, but invitations to engage
               with your surroundings, in all their living, non-living, and
               silent forms. It is a refusal to see architecture as a finished
               product, but rather as an emerging ecosystem.
@@ -185,7 +227,7 @@ export default function About() {
             {/* Signature section */}
             <div className="pt-2">
               <p className="text-base lg:text-lg font-light text-black">
-                Udhayarajan N, B.Arch
+                N. Udhayarajan, B.Arch
               </p>
               <p className="text-base lg:text-lg text-gray-700 font-light">
                 Founder & Principal Architect
@@ -204,36 +246,49 @@ export default function About() {
           />
         </div>
 
-        {/*one by onw topics*/}
+        {/* Scope of Work Section */}
         <div>
-          <h1 ref={landscapeTitleRef} className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mt-8 sm:mt-10 lg:mt-12 mb-4 sm:mb-5">
-            LANDSCAPE
+          <h1 ref={scopeTitleRef} className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mt-8 sm:mt-10 lg:mt-12 mb-4 sm:mb-5">
+            SCOPE OF WORK
           </h1>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-20">
             {/* Left Column */}
-            <div ref={landscapeLeftRef} className="space-y-6 lg:space-y-8">
+            <div ref={scopeLeftRef} className="space-y-6 lg:space-y-8">
               <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-                As public space and biodiversity are subtracted in urban spaces,
-                BIG Landscape works with architects and other disciplines to
-                integrate the built and natural worlds, connecting people to
-                people, and people to nature. With every project, we go beyond
-                the brief to give the gift of public space to the communities in
-                which we work, creating equitable and accessible public spaces
-                for all.
+                In POROUSBEING, we offer comprehensive consultancy services across
+                multiple disciplines of design and planning. Our integrated approach
+                ensures seamless coordination between architecture, landscape, and
+                urban strategy.
               </p>
+              <ul className="space-y-3 text-sm sm:text-base lg:text-lg text-gray-700">
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Architecture Design Consultancy Services
+                </li>
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Urban Design and Strategy Consultancy Service
+                </li>
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Interior Architecture Consultancy Service
+                </li>
+              </ul>
             </div>
 
             {/* Right Column */}
-            <div ref={landscapeRightRef} className="space-y-6 lg:space-y-8">
-              <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-                Our work not only responds to challenges today, it mitigates
-                challenges of the future: we approach every project as an
-                opportunity to use nature-based solutions for social and
-                technological integration, community building, ecology
-                preservation, biophilia and biodiversity enhancement to design
-                sustainable, smarter and safer cities.
-              </p>
+            <div ref={scopeRightRef} className="space-y-6 lg:space-y-8">
+              <ul className="space-y-3 text-sm sm:text-base lg:text-lg text-gray-700">
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Landscape Architecture Consultancy Service
+                </li>
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Hydro Spatial Strategy and Planning
+                </li>
+              </ul>
             </div>
           </div>
 
@@ -262,7 +317,7 @@ export default function About() {
               className="flex gap-4 sm:gap-6 lg:gap-8"
               style={{ minWidth: "fit-content" }}
             >
-              {/* PUBLIC REALM + */}
+              {/* Architecture */}
               <div ref={(el) => (galleryItemsRef.current[0] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
@@ -270,19 +325,19 @@ export default function About() {
                 >
                   <img
                     src="https://images.unsplash.com/photo-1449824913935-59a10b8d2000?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80"
-                    alt="Public Realm"
+                    alt="Architecture"
                     className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
                   <div className="w-2 h-2 bg-black mr-2"></div>
                   <p className="text-base sm:text-lg font-light text-black">
-                    PUBLIC REALM +
+                    ARCHITECTURE +
                   </p>
                 </div>
               </div>
 
-              {/* PARKS + */}
+              {/* Urban Design */}
               <div ref={(el) => (galleryItemsRef.current[1] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
@@ -290,19 +345,19 @@ export default function About() {
                 >
                   <img
                     src="https://plus.unsplash.com/premium_photo-1732835620501-116098579418?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=464"
-                    alt="Parks"
+                    alt="Urban Design"
                     className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
                   <div className="w-2 h-2 bg-black mr-2"></div>
                   <p className="text-base sm:text-lg font-light text-black">
-                    PARKS +
+                    URBAN DESIGN +
                   </p>
                 </div>
               </div>
 
-              {/* GARDENS + */}
+              {/* Landscape */}
               <div ref={(el) => (galleryItemsRef.current[2] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
                 <div
                   className="rounded-none overflow-hidden"
@@ -310,20 +365,112 @@ export default function About() {
                 >
                   <img
                     src="https://plus.unsplash.com/premium_photo-1739452120449-9f79dc47a62e?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870"
-                    alt="Gardens"
+                    alt="Landscape"
                     className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
                   />
                 </div>
                 <div className="flex items-center mt-3 sm:mt-4">
                   <div className="w-2 h-2 bg-black mr-2"></div>
                   <p className="text-base sm:text-lg font-light text-black">
-                    GARDENS +
+                    LANDSCAPE +
+                  </p>
+                </div>
+              </div>
+
+              {/* Hydro Spatial */}
+              <div ref={(el) => (galleryItemsRef.current[3] = el)} className="flex-shrink-0 w-64 sm:w-80 lg:w-96 group">
+                <div
+                  className="rounded-none overflow-hidden"
+                  style={{ border: "none" }}
+                >
+                  <img
+                    src="https://images.unsplash.com/photo-1487958449943-2429e8be8625?ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&q=80&w=870"
+                    alt="Hydro Spatial"
+                    className="w-full h-64 sm:h-80 lg:h-96 object-cover rounded-none pointer-events-none transition-transform duration-500 group-hover:scale-105"
+                  />
+                </div>
+                <div className="flex items-center mt-3 sm:mt-4">
+                  <div className="w-2 h-2 bg-black mr-2"></div>
+                  <p className="text-base sm:text-lg font-light text-black">
+                    HYDRO SPATIAL +
                   </p>
                 </div>
               </div>
             </div>
           </div>
         </div>
+
+        {/* Team Section */}
+        <div ref={teamSectionRef} className="mt-16 sm:mt-20">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mb-6 sm:mb-8">
+            TEAM
+          </h1>
+          <div className="space-y-2 text-sm sm:text-base lg:text-lg text-gray-700">
+            <p><span className="font-semibold text-black">N. Udhayarajan, B.Arch</span> - Principal Architect</p>
+            <p><span className="font-semibold text-black">Suresh Kumar J, M.Arch, MSc Project Management (NUS)</span> - Project Director</p>
+          </div>
+        </div>
+
+        {/* Principal Architect Section */}
+        <div ref={principalRef} className="mt-16 sm:mt-20">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-normal text-black mb-2">
+            Principal Architect
+          </h2>
+          <p className="text-lg sm:text-xl font-semibold text-black mb-6">N. Udhayarajan, B.Arch</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <div className="space-y-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+              <p>
+                Udhayarajan is an architect with over 14 years of experience in architecture and urban design. His work spans large-scale government projects, institutional buildings, community housing, and ecological urban strategies.
+              </p>
+              <p>
+                His expertise lies in institutional buildings and community housing, with a strong emphasis on conceptualizing spatial design within the frameworks of sustainability and urban governance. His work blends ecological sensitivity with contextual clarity, reflecting a deep commitment to creating spaces that are both functional and transformative.
+              </p>
+              <p>
+                He began his career with IL&FS EcoSmart, working on the Eco Restoration Plan for the Adyar Creek and Estuary (300 acres), and later collaborated with the Transportation Department at Anna University on bus terminal designs in Chennai.
+              </p>
+            </div>
+            <div className="space-y-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+              <p>
+                As co-founder of WEBE Design Lab, he led several notable urban projects, including the North Usman Road footpath design for Chennai Smart City and green strategy proposals for Ambattur Ward in partnership with Care Earth Trust.
+              </p>
+              <p>
+                He worked with GIZ India to conceptualize a design competition on the future of Buckingham Canal, and served as one of the Project Architects for the Indian National War Memorial, New Delhi, inaugurated by the Hon. Prime Minister of India. He also led the design of the Water Matters exhibition in collaboration with the American Consulate Chennai, Care Earth Trust, and the Smithsonian Institution.
+              </p>
+              <p>
+                Udhayarajan is currently the founder and principal of Porous Being, a design practice exploring the intersection of spatial design, ecology, and urbanism. He also leads the Uvakai Research Foundation, a think tank working on water, environment, governance, and community well-being.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* Project Director Section */}
+        <div ref={directorRef} className="mt-16 sm:mt-20 mb-16">
+          <h2 className="text-xl sm:text-2xl lg:text-3xl font-normal text-black mb-2">
+            Project Director
+          </h2>
+          <p className="text-lg sm:text-xl font-semibold text-black mb-6">Suresh J</p>
+
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+            <div className="space-y-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+              <p>
+                Suresh J is a seasoned project management professional with over 15 years of experience in the construction and real estate industry. His career spans both Indian and international contexts, including significant roles in Singapore and across South India, where he has managed large-scale commercial, institutional, and residential developments.
+              </p>
+              <p>
+                His expertise lies in end-to-end project planning, site due diligence, approval drawings, and design coordination. His ability to streamline execution across various project scales has made him a reliable consultant for both private developers and corporate clients.
+              </p>
+            </div>
+            <div className="space-y-4 text-sm sm:text-base text-gray-700 leading-relaxed">
+              <p>
+                Suresh has worked with firms such as MARG Ltd., Studio 7 Consultants, Chennai Engineers & Contractors, and Logistics Construction Pvt. Ltd. (Singapore). These experiences have equipped him with specialized skills in handling SEZ plotting, particularly for light engineering industries, customizing infrastructure as per diverse industrial requirements.
+              </p>
+              <p>
+                He has also led design and build initiatives for high-density residential developments, delivering several hundred apartment units across Chennai. His in-depth understanding of construction ecosystems, regulatory processes, and interdisciplinary collaboration makes him a valuable asset in delivering projects that are efficient, compliant, and contextually grounded.
+              </p>
+            </div>
+          </div>
+        </div>
+
       </div>
     </div>
   );

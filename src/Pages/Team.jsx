@@ -7,11 +7,20 @@ gsap.registerPlugin(ScrollTrigger);
 
 export default function Teams() {
   const people = [
-    { name: "Bjarke Ingels", role: "Founder", location: "CPH", image: img1 },
-    { name: "Sheela Maini Søgaard", role: "CEO & Partner", location: "CPH", image: img1 },
-    { name: "Agustin Perez-Torres", role: "Partner", location: "BCN", image: img1 },
-    { name: "Alexandru Malaescu", role: "Partner", location: "LON", image: img1 },
-    { name: "Andreas Klok Pedersen", role: "Partner", location: "LON", image: img1 },
+    {
+      name: "N. Udhayarajan",
+      role: "Principal Architect",
+      location: "Chennai",
+      image: img1,
+      bio: "Udhayarajan is an architect with over 14 years of experience in architecture and urban design. His work spans large-scale government projects, institutional buildings, community housing, and ecological urban strategies. His expertise lies in institutional buildings and community housing, with a strong emphasis on conceptualizing spatial design within the frameworks of sustainability and urban governance. He began his career with IL&FS EcoSmart, working on the Eco Restoration Plan for the Adyar Creek and Estuary (300 acres). He served as one of the Project Architects for the Indian National War Memorial, New Delhi, inaugurated by the Hon. Prime Minister of India. Udhayarajan is currently the founder and principal of Porous Being, a design practice exploring the intersection of spatial design, ecology, and urbanism. He also leads the Uvakai Research Foundation, a think tank working on water, environment, governance, and community well-being."
+    },
+    {
+      name: "Suresh Kumar J",
+      role: "Project Director",
+      location: "Chennai",
+      image: img1,
+      bio: "Suresh J is a seasoned project management professional with over 15 years of experience in the construction and real estate industry. His career spans both Indian and international contexts, including significant roles in Singapore and across South India, where he has managed large-scale commercial, institutional, and residential developments. His expertise lies in end-to-end project planning, site due diligence, approval drawings, and design coordination. Suresh has worked with firms such as MARG Ltd., Studio 7 Consultants, Chennai Engineers & Contractors, and Logistics Construction Pvt. Ltd. (Singapore). He has also led design and build initiatives for high-density residential developments, delivering several hundred apartment units across Chennai."
+    },
   ];
 
   const categories = ["PARTNERS", "ASSOCIATES", "DIRECTORS"];
@@ -19,6 +28,7 @@ export default function Teams() {
 
   const titleRef = useRef(null);
   const categoriesRef = useRef([]);
+  const mobileCategoriesRef = useRef([]);
   const peopleItemsRef = useRef([]);
   const imageContainerRef = useRef(null);
 
@@ -26,6 +36,7 @@ export default function Teams() {
     // Set initial states
     gsap.set(titleRef.current, { y: 100, opacity: 0 });
     gsap.set(categoriesRef.current, { x: -30, opacity: 0 });
+    gsap.set(mobileCategoriesRef.current, { y: -20, opacity: 0 });
     gsap.set(peopleItemsRef.current, { x: -50, opacity: 0 });
     if (imageContainerRef.current) {
       gsap.set(imageContainerRef.current, { x: 100, opacity: 0 });
@@ -44,6 +55,15 @@ export default function Teams() {
       opacity: 1,
       duration: 0.6,
       stagger: 0.15,
+      ease: "power2.out",
+      delay: 0.3
+    });
+
+    gsap.to(mobileCategoriesRef.current, {
+      y: 0,
+      opacity: 1,
+      duration: 0.6,
+      stagger: 0.1,
       ease: "power2.out",
       delay: 0.3
     });
@@ -68,7 +88,7 @@ export default function Teams() {
     }
   }, []);
 
-  const handlePersonHover = (idx) => {
+  const handlePersonClick = (idx) => {
     setActivePerson(idx);
 
     // Animate image transition
@@ -90,56 +110,105 @@ export default function Teams() {
   };
 
   return (
-    <div className="flex min-h-screen px-4 md:px-8 lg:px-24 relative">
-      {/* LEFT CATEGORY SIDEBAR */}
-      <div className="hidden lg:flex w-1/6 flex-col gap-4 text-gray-600 fixed left-8 top-1/2 -translate-y-1/2 justify-center">
+    <div className="flex flex-col lg:flex-row min-h-screen px-4 md:px-6 lg:px-12 xl:px-24">
+      {/* Sidebar - Desktop (lg only) */}
+      <div className="hidden lg:flex w-1/6 flex-col gap-4 text-gray-600 fixed left-6 xl:left-8 top-1/2 -translate-y-1/2">
         {categories.map((cat, idx) => (
           <div
             key={idx}
             ref={(el) => (categoriesRef.current[idx] = el)}
             onMouseEnter={(e) => handleCategoryHover(e, true)}
             onMouseLeave={(e) => handleCategoryHover(e, false)}
-            className={`cursor-pointer text-sm ${idx === 0 ? "font-bold text-black" : ""}`}
+            className={`cursor-pointer text-xs xl:text-sm ${
+              idx === 0 ? "font-bold" : ""
+            } hover:text-black`}
           >
             {cat}
           </div>
         ))}
       </div>
 
-      {/* CENTER PEOPLE LIST */}
-      <div className="flex-1 lg:ml-48 pt-16 max-w-xl">
-        <h1 ref={titleRef} className="text-5xl md:text-6xl lg:text-7xl font-normal mb-12">PEOPLE</h1>
+      {/* Main Content */}
+      <div className="flex-1 lg:ml-24 xl:ml-32 max-w-6xl">
+        <h1 ref={titleRef} className="mt-12 text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 lg:mb-12 xl:mb-16">
+          PEOPLE
+        </h1>
 
-        <div className="h-[65vh] overflow-y-auto pr-4">
-          {people.map((p, idx) => (
+        {/* Mobile + Tablet Categories (Top) */}
+        <div className="flex lg:hidden overflow-x-auto gap-4 text-gray-600 mb-6">
+          {categories.map((cat, idx) => (
             <div
               key={idx}
-              ref={(el) => (peopleItemsRef.current[idx] = el)}
-              onMouseEnter={() => handlePersonHover(idx)}
-              className={`py-3 cursor-pointer border-b border-gray-200 transition-all duration-200 ${
-                activePerson === idx ? "text-black font-semibold" : "text-gray-600"
+              ref={(el) => (mobileCategoriesRef.current[idx] = el)}
+              className={`cursor-pointer whitespace-nowrap ${
+                idx === 0 ? "font-bold" : ""
               }`}
             >
-              <div className="text-lg">{p.name}</div>
-              <div className="text-sm text-gray-500">{p.role}, {p.location}</div>
+              {cat}
             </div>
           ))}
         </div>
-      </div>
 
-      {/* RIGHT FIXED IMAGE PREVIEW */}
-      <div ref={imageContainerRef} className="hidden lg:block fixed right-12 top-1/2 -translate-y-1/2 w-96">
-        <img
-          src={people[activePerson].image}
-          alt={people[activePerson].name}
-          className="w-full h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl"
-        />
+        <div className="flex flex-col lg:flex-row gap-8 lg:gap-12 pr-4 lg:pr-8">
 
-        <div className="mt-4 text-center">
-          <h2 className="text-lg font-semibold">{people[activePerson].name}</h2>
-          <p className="text-gray-600 text-sm">
-            {people[activePerson].role}, {people[activePerson].location}
-          </p>
+          {/* CENTER PEOPLE LIST */}
+          <div className="flex-1 max-w-md">
+            <div className="lg:h-[65vh] overflow-y-auto pr-4" style={{ scrollbarWidth: 'thin', scrollbarColor: '#d1d5db transparent' }}>
+              {people.map((p, idx) => (
+                <div
+                  key={idx}
+                  ref={(el) => (peopleItemsRef.current[idx] = el)}
+                  className="border-b border-gray-200"
+                  style={{ opacity: 0, transform: 'translateX(-50px)' }}
+                >
+                  <div
+                    onClick={() => handlePersonClick(idx)}
+                    className={`py-3 cursor-pointer transition-all duration-200 ${
+                      activePerson === idx ? "text-black font-semibold" : "text-gray-600"
+                    }`}
+                  >
+                    <div className="text-lg">{p.name}</div>
+                    <div className="text-sm text-gray-500">{p.role}, {p.location}</div>
+                  </div>
+
+                  {/* Mobile Accordion Content */}
+                  <div className={`lg:hidden overflow-hidden transition-all duration-300 ${activePerson === idx ? 'max-h-[1000px] pb-4' : 'max-h-0'}`}>
+                    <img
+                      src={p.image}
+                      alt={p.name}
+                      className="w-full h-auto object-cover rounded-lg shadow-lg mb-4"
+                    />
+                    <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
+                    <p className="text-gray-600 text-sm mb-3">
+                      {p.role}, {p.location}
+                    </p>
+                    <p className="text-gray-700 text-sm leading-relaxed">
+                      {p.bio}
+                    </p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* RIGHT IMAGE PREVIEW - Desktop Only */}
+          <div ref={imageContainerRef} className="hidden lg:block flex-1 max-w-2xl" style={{ opacity: 0, transform: 'translateX(100px)' }}>
+            <img
+              src={people[activePerson].image}
+              alt={people[activePerson].name}
+              className="w-full h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl"
+            />
+
+            <div className="mt-6">
+              <h2 className="text-2xl font-semibold mb-2">{people[activePerson].name}</h2>
+              <p className="text-gray-600 text-base mb-4">
+                {people[activePerson].role}, {people[activePerson].location}
+              </p>
+              <p className="text-gray-700 text-sm leading-relaxed">
+                {people[activePerson].bio}
+              </p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

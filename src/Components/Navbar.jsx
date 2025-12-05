@@ -124,7 +124,7 @@ export default function Navbar() {
         </div>
 
         {/* Center Navigation Links */}
-        <nav className="flex gap-3 lg:gap-6">
+        <nav className="flex gap-2 sm:gap-3 lg:gap-6">
           {navLinks.map((link, index) => (
             <Link
               key={link.name}
@@ -132,19 +132,19 @@ export default function Navbar() {
               ref={(el) => (navLinksRef.current[index] = el)}
               onMouseEnter={(e) => handleNavHover(e, true)}
               onMouseLeave={(e) => handleNavHover(e, false)}
-              className="text-xs md:text-sm font-light hover:text-blue-500 transition-colors"
+              className="text-[10px] sm:text-xs md:text-sm font-light hover:text-blue-500 transition-colors"
             >
               {link.name}
             </Link>
           ))}
         </nav>
 
-        {/* Search Bar */}
-        <div ref={searchRef} className="relative">
+        {/* Search Bar - Hidden on mobile */}
+        <div ref={searchRef} className="relative hidden md:block">
           <input
             type="text"
             placeholder="Search..."
-            className="w-24 md:w-32 lg:w-40 pl-8 pr-2 py-1.5 rounded-lg bg-gray-100 focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-sm"
+            className="w-32 lg:w-40 pl-8 pr-2 py-1.5 rounded-lg bg-gray-100 focus:bg-white focus:ring-1 focus:ring-blue-500 outline-none transition-all duration-300 text-sm"
           />
           <svg
             xmlns="http://www.w3.org/2000/svg"

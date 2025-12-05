@@ -8,6 +8,7 @@ gsap.registerPlugin(ScrollTrigger);
 export default function News() {
   const titleRef = useRef(null);
   const categoriesRef = useRef([]);
+  const mobileCategoriesRef = useRef([]);
   const newsItemsRef = useRef([]);
 
   const categories = ["NEWS", "EVENTS", "AWARDS", "LECTURES"];
@@ -40,18 +41,33 @@ export default function News() {
 
   useEffect(() => {
     const ctx = gsap.context(() => {
+      // Set initial states
+      gsap.set(titleRef.current, { y: 100, opacity: 0 });
+      gsap.set(categoriesRef.current, { x: -30, opacity: 0 });
+      gsap.set(mobileCategoriesRef.current, { y: -20, opacity: 0 });
+
       // Title animation - split and reveal
-      gsap.from(titleRef.current, {
-        y: 100,
-        opacity: 0,
+      gsap.to(titleRef.current, {
+        y: 0,
+        opacity: 1,
         duration: 1.2,
         ease: "power4.out"
       });
 
-      // Categories stagger animation
-      gsap.from(categoriesRef.current, {
-        x: -30,
-        opacity: 0,
+      // Categories stagger animation (desktop)
+      gsap.to(categoriesRef.current, {
+        x: 0,
+        opacity: 1,
+        duration: 0.6,
+        stagger: 0.1,
+        ease: "power2.out",
+        delay: 0.3
+      });
+
+      // Mobile categories stagger animation
+      gsap.to(mobileCategoriesRef.current, {
+        y: 0,
+        opacity: 1,
         duration: 0.6,
         stagger: 0.1,
         ease: "power2.out",
@@ -154,6 +170,7 @@ export default function News() {
         {categories.map((cat, idx) => (
           <div
             key={idx}
+            ref={(el) => (mobileCategoriesRef.current[idx] = el)}
             className={`cursor-pointer whitespace-nowrap ${
               idx === 0 ? "font-bold" : ""
             }`}

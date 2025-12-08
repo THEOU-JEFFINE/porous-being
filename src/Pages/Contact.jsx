@@ -19,7 +19,7 @@ export default function Contact() {
         y: 100,
         opacity: 0,
         duration: 1.2,
-        ease: "power4.out"
+        ease: "power4.out",
       });
 
       // Subtitle animation
@@ -28,7 +28,7 @@ export default function Contact() {
         opacity: 0,
         duration: 1,
         ease: "power3.out",
-        delay: 0.2
+        delay: 0.2,
       });
 
       // Left column info cards stagger
@@ -38,7 +38,7 @@ export default function Contact() {
         duration: 0.8,
         stagger: 0.15,
         ease: "power3.out",
-        delay: 0.4
+        delay: 0.4,
       });
 
       // Form fields stagger
@@ -48,7 +48,7 @@ export default function Contact() {
         duration: 0.6,
         stagger: 0.1,
         ease: "power2.out",
-        delay: 0.6
+        delay: 0.6,
       });
 
       // Map animation
@@ -60,8 +60,8 @@ export default function Contact() {
         scrollTrigger: {
           trigger: mapRef.current,
           start: "top bottom-=100",
-          toggleActions: "play none none reverse"
-        }
+          toggleActions: "play none none reverse",
+        },
       });
     });
 
@@ -75,26 +75,21 @@ export default function Contact() {
         "123 Business Avenue",
         "Suite 456, Floor 7",
         "New York, NY 10001",
-        "United States"
-      ]
+        "United States",
+      ],
     },
     {
       title: "CONTACT",
       details: [
         "hello@porousbeing.com",
         "careers@porousbeing.com",
-        "+1 (555) 123-4567"
-      ]
+        "+1 (555) 123-4567",
+      ],
     },
     {
       title: "FOLLOW",
-      details: [
-        "Instagram",
-        "LinkedIn",
-        "Facebook",
-        "Vimeo"
-      ]
-    }
+      details: ["Instagram", "LinkedIn", "Facebook", "Vimeo"],
+    },
   ];
 
   return (
@@ -112,7 +107,8 @@ export default function Contact() {
             ref={subtitleRef}
             className="text-base sm:text-lg lg:text-xl text-gray-600 max-w-2xl"
           >
-            Let's discuss how we can transform your vision into porous, breathable spaces.
+            Let's discuss how we can transform your vision into porous,
+            breathable spaces.
           </p>
         </div>
 
@@ -189,6 +185,19 @@ export default function Contact() {
 
               <div ref={(el) => (formFieldsRef.current[3] = el)}>
                 <label className="block text-xs font-bold tracking-wider text-black mb-2">
+                  PURPOSE
+                </label>
+                <select className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base cursor-pointer">
+                  <option value="">Select purpose</option>
+                  <option>Student</option>
+                  <option>Intern</option>
+                  <option>Job</option>
+                  <option>Consultant</option>
+                </select>
+              </div>
+
+              <div ref={(el) => (formFieldsRef.current[4] = el)}>
+                <label className="block text-xs font-bold tracking-wider text-black mb-2">
                   PROJECT TYPE
                 </label>
                 <select className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base cursor-pointer">
@@ -200,7 +209,7 @@ export default function Contact() {
                 </select>
               </div>
 
-              <div ref={(el) => (formFieldsRef.current[4] = el)}>
+              <div ref={(el) => (formFieldsRef.current[5] = el)}>
                 <label className="block text-xs font-bold tracking-wider text-black mb-2">
                   MESSAGE
                 </label>
@@ -211,7 +220,10 @@ export default function Contact() {
                 />
               </div>
 
-              <div ref={(el) => (formFieldsRef.current[5] = el)} className="pt-4">
+              <div
+                ref={(el) => (formFieldsRef.current[6] = el)}
+                className="pt-4"
+              >
                 <button
                   type="submit"
                   className="group relative w-full sm:w-auto px-12 py-4 bg-black text-white text-sm font-medium tracking-wider overflow-hidden transition-all duration-300 hover:bg-gray-900"
@@ -225,7 +237,10 @@ export default function Contact() {
         </div>
 
         {/* Map Section */}
-        <div ref={mapRef} className="w-full h-96 lg:h-[500px] bg-gray-200 rounded-none overflow-hidden">
+        <div
+          ref={mapRef}
+          className="w-full h-96 lg:h-[500px] bg-gray-200 rounded-none overflow-hidden"
+        >
           <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
             <div className="text-center">
               <div className="w-16 h-16 mx-auto mb-4 border-2 border-black flex items-center justify-center">

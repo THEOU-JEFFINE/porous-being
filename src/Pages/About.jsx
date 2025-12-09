@@ -1,6 +1,7 @@
 import React, { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import pblImage from "../assets/pbl.jpeg";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -16,31 +17,6 @@ export default function About() {
   const scopeTitleRef = useRef(null);
   const scopeLeftRef = useRef(null);
   const galleryItemsRef = useRef([]);
-
-  const handleMouseDown = (e) => {
-    isDragging.current = true;
-    startX.current = e.pageX - scrollContainerRef.current.offsetLeft;
-    scrollLeft.current = scrollContainerRef.current.scrollLeft;
-    scrollContainerRef.current.style.cursor = "grabbing";
-  };
-
-  const handleMouseLeave = () => {
-    isDragging.current = false;
-    scrollContainerRef.current.style.cursor = "grab";
-  };
-
-  const handleMouseUp = () => {
-    isDragging.current = false;
-    scrollContainerRef.current.style.cursor = "grab";
-  };
-
-  const handleMouseMove = (e) => {
-    if (!isDragging.current) return;
-    e.preventDefault();
-    const x = e.pageX - scrollContainerRef.current.offsetLeft;
-    const walk = (x - startX.current) * 2;
-    scrollContainerRef.current.scrollLeft = scrollLeft.current - walk;
-  };
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -161,7 +137,7 @@ export default function About() {
         <div className="mt-10 sm:mt-16 lg:mt-20">
           <img
             ref={mainImageRef}
-            src="src/assets/pbl.jpeg"
+            src={pblImage}
             alt="Architecture"
             className="w-full h-48 sm:h-64 lg:h-96 rounded-none object-cover"
           />

@@ -410,33 +410,6 @@ function ProjectGalleryWrapper({
           isActive={isActive}
           isMobile={isMobile}
         />
-
-        {/* Close button when expanded */}
-        {isScrolled && (
-          <button
-            onClick={(e) => {
-              e.stopPropagation();
-              onSetActive(); // This will toggle off
-            }}
-            className="fixed top-6 right-6 z-[60] w-10 h-10 flex items-center justify-center bg-white/90 hover:bg-white rounded-full shadow-lg transition-all duration-300 hover:scale-110 group"
-          >
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              width="20"
-              height="20"
-              viewBox="0 0 24 24"
-              fill="none"
-              stroke="currentColor"
-              strokeWidth="2"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              className="text-gray-700 group-hover:text-black transition-colors"
-            >
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
-        )}
       </div>
     </div>
   );
@@ -498,8 +471,8 @@ export default function HorizontalScrollGalleryExample() {
         const maxDistance = windowHeight;
 
         // Calculate scale based on distance from center
-        const scale = Math.max(0.92, 1 - (distance / maxDistance) * 0.08);
-        const opacity = Math.max(0.7, 1 - (distance / maxDistance) * 0.3);
+        const scale = 1;
+        const opacity = 1;
 
         gsap.to(ref, {
           scale,

@@ -173,7 +173,12 @@ export default function HorizontalScrollGallery({
     const items = el.querySelectorAll(".gallery-item");
     if (!items.length) return;
 
+    let scrollTimeout;
+
     const handleScroll = () => {
+      // Clear existing timeout
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+
       const scrollLeft = el.scrollLeft;
       const containerWidth = el.clientWidth;
       const centerPoint = scrollLeft + containerWidth / 2;
@@ -198,13 +203,28 @@ export default function HorizontalScrollGallery({
           overwrite: "auto",
         });
       });
+
+      // Reset all items to scale 1 after scrolling stops
+      scrollTimeout = setTimeout(() => {
+        items.forEach((item) => {
+          gsap.to(item, {
+            scale: 1,
+            duration: 0.4,
+            ease: "power2.out",
+            overwrite: "auto",
+          });
+        });
+      }, 150);
     };
 
     // Initial scale calculation
     handleScroll();
 
     el.addEventListener("scroll", handleScroll);
-    return () => el.removeEventListener("scroll", handleScroll);
+    return () => {
+      el.removeEventListener("scroll", handleScroll);
+      if (scrollTimeout) clearTimeout(scrollTimeout);
+    };
   }, []);
 
   // If intro is provided, add it as the first item
@@ -235,47 +255,41 @@ export default function HorizontalScrollGallery({
               style={{ width: `auto` }}
             >
               {item.type === "intro" ? (
-                <div className="flex h-full w-[85vw] sm:w-[350px] md:w-[400px] lg:w-full flex-col items-center justify-between py-6 sm:py-10 px-4 sm:px-6 bg-white text-neutral-800 text-[0.95rem]">
-                  {/* Top logo */}
+                <div className="flex h-full w-[85vw] sm:w-[350px] md:w-[400px] lg:w-full flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6 bg-white text-neutral-800 text-[0.95rem]">
+                  {/* Logo */}
                   {item.logo && (
                     <img
                       src={item.logo}
                       alt="Logo"
-                      className="w-20 h-20 mt-2 mb-8 object-contain"
+                      className="w-20 h-20 mt-2 object-contain flex-shrink-0"
                     />
                   )}
+
                   {/* Title, location, year */}
-                  <div className="flex flex-col items-end mt-2">
-                    <h1 className="text-[1.3rem] font-normal text-center mb-2 tracking-tight leading-tight">
+                  <div className="flex flex-col items-end gap-6 w-full">
+                    <h1 className="text-[1.3rem] font-normal text-end tracking-tight leading-tight">
                       {item.title}
                     </h1>
-                    <div className="text-base text-gray-400 text-center tracking-wide uppercase leading-tight mb-1">
+                    <div className="text-base text-gray-400 text-end tracking-wide uppercase leading-tight">
                       {item.location}
                     </div>
-                    <div className="text-base text-gray-400 text-center tracking-wide leading-tight mb-6">
+                    <div className="text-base text-gray-400 text-end tracking-wide leading-tight">
                       {item.year}
                     </div>
                   </div>
+
                   {/* Details */}
-                  <div className="flex flex-col items-end gap-6 mt-8 w-full pr-2">
-                    <div className="flex flex-col items-end">
-                      <div className="text-gray-400 text-xs uppercase tracking-wide mb-1">
+                  <div className="flex flex-col items-end gap-8 w-full pr-2">
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="text-gray-400 text-xs uppercase tracking-wide">
                         TYPOLOGY
                       </div>
                       <div className="text-sm font-normal text-right">
                         {item.typology}
                       </div>
                     </div>
-                    <div className="flex flex-col items-end">
-                      <div className="text-gray-400 text-xs uppercase tracking-wide mb-1">
-                        SIZE M2/FT2
-                      </div>
-                      <div className="text-sm font-normal text-right">
-                        {item.size}
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end">
-                      <div className="text-gray-400 text-xs uppercase tracking-wide mb-1">
+                    <div className="flex flex-col items-end gap-2">
+                      <div className="text-gray-400 text-xs uppercase tracking-wide">
                         STATUS
                       </div>
                       <div className="text-sm font-normal text-right">
@@ -283,34 +297,9 @@ export default function HorizontalScrollGallery({
                       </div>
                     </div>
                   </div>
-                  {/* Share icons */}
-                  <div className="flex flex-col items-end w-full pr-2 mt-auto mb-2">
-                    <span className="text-gray-400 text-xs mb-2 tracking-wide">
-                      SHARE
-                    </span>
-                    <div className="flex gap-2 justify-end">
-                      {item.shareIcons &&
-                        item.shareIcons.map((icon, i) => (
-                          <a
-                            key={i}
-                            href={icon.href}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="w-8 h-8 bg-black text-white flex items-center justify-center"
-                          >
-                            {icon.icon}
-                          </a>
-                        ))}
-                    </div>
-                  </div>
-                  {/* Top logo */}
-                  {item.logo && (
-                    <img
-                      src={item.logo}
-                      alt="Logo"
-                      className="w-16 h-16 mb-8 object-contain"
-                    />
-                  )}
+
+                  {/* Spacer for bottom alignment */}
+                  <div className="flex-shrink-0" />
                 </div>
               ) : item.type === "image" ? (
                 // Image section
@@ -318,11 +307,7 @@ export default function HorizontalScrollGallery({
                   <img
                     src={item.src}
                     alt={item.alt || `Image ${index + 1}`}
-                    className="h-full w-full sm:w-auto object-cover brightness-100 contrast-100 saturate-100"
-                    style={{
-                      imageRendering: "crisp-edges",
-                      WebkitFontSmoothing: "antialiased",
-                    }}
+                    className="h-full w-full sm:w-auto object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
                     fetchpriority={index === 0 ? "high" : undefined}
                   />

@@ -1,6 +1,6 @@
 import { useEffect, useRef } from "react";
 import { gsap } from "gsap";
-import loadingVideo from "../assets/pa.mp4";
+import loadingVideo from "../assets/final-pb-animation.mp4";
 
 export default function Landing({ onComplete }) {
   const containerRef = useRef(null);

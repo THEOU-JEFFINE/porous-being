@@ -9,7 +9,7 @@ const residentialImageModules = import.meta.glob(
   { eager: true, as: "url" }
 );
 const greenwaysImageModules = import.meta.glob(
-  "../assets/resgreenways/interior/*.{png,jpg}",
+  "../assets/resgreenways/*.{png,jpg}",
   { eager: true, as: "url" }
 );
 const kanyakumariImageModules = import.meta.glob(

@@ -2,21 +2,21 @@ import React, { useRef, useEffect } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import pblImage from "../assets/pbl.jpeg";
-
+import offImage from "../assets/Office_pic.jpg";
 gsap.registerPlugin(ScrollTrigger);
 
 export default function About() {
-  const scrollContainerRef = useRef(null);
-  const isDragging = useRef(false);
-  const startX = useRef(0);
-  const scrollLeft = useRef(0);
-
   const titleRef = useRef(null);
   const leftColumnRef = useRef(null);
   const mainImageRef = useRef(null);
   const scopeTitleRef = useRef(null);
   const scopeLeftRef = useRef(null);
   const galleryItemsRef = useRef([]);
+
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -100,87 +100,92 @@ export default function About() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Main content container */}
-      <div className="max-w-7xl mx-auto lg:ml-30 px-4 sm:px-10 lg:px-30 py-8 sm:py-12 lg:py-20">
-        {/* Large "PHILOSOPHY" heading */}
+    <div className="min-h-screen px-4 md:px-8 lg:px-16 xl:px-24">
+      {/* Main Content */}
+      <div className="max-w-5xl mx-auto">
         <h1
           ref={titleRef}
-          className="text-3xl sm:text-4xl lg:text-5xl font-normal text-black mb-6 sm:mb-8 lg:mb-10"
+          className="mt-12 text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 lg:mb-12 xl:mb-16"
         >
           PHILOSOPHY
         </h1>
 
-        {/* Single column layout */}
-        <div ref={leftColumnRef} className="space-y-6 lg:space-y-8 max-w-3xl">
-          <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-            At Porous Being, we translate the philosophy of porosity into built
-            environments that live, breathe, and evolve. It is our commitment to
-            create spaces that are open, responsive and generative.
-          </p>
-
-          <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-light">
-            To design porously is to resist excess and allow space for nature to
-            settle - to shape not just enclosures, but invitations to engage
-            with your surroundings, in all their living, non-living, and silent
-            forms. It is a refusal to see architecture as a finished product,
-            but rather as an emerging ecosystem.
-          </p>
-
-          <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-            Porous Being is a process of resistance to isolation, over
-            definition and sealed systems.
-          </p>
-        </div>
-
-        {/* Image section */}
-        <div className="mt-10 sm:mt-16 lg:mt-20">
-          <img
-            ref={mainImageRef}
-            src={pblImage}
-            alt="Architecture"
-            className="w-full h-48 sm:h-64 lg:h-96 rounded-none object-cover"
-          />
-        </div>
-
-        {/* Scope of Work Section */}
         <div>
-          <h1
-            ref={scopeTitleRef}
-            className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mt-8 sm:mt-10 lg:mt-12 mb-4 sm:mb-5"
-          >
-            SCOPE OF WORK
-          </h1>
-
-          <div ref={scopeLeftRef} className="space-y-6 lg:space-y-8 max-w-3xl">
-            <p className="text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-              In POROUSBEING, we offer comprehensive consultancy services across
-              multiple disciplines of design and planning. Our integrated
-              approach ensures seamless coordination between architecture,
-              landscape, and urban strategy.
+          {/* Philosophy Content */}
+          <div ref={leftColumnRef} className="space-y-6 lg:space-y-8">
+            <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
+              At Porous Being, we translate the philosophy of porosity into
+              built environments that live, breathe, and evolve. It is our
+              commitment to create spaces that are open, responsive and
+              generative.
             </p>
-            <ul className="space-y-3 text-sm sm:text-base lg:text-lg text-gray-700">
-              <li className="flex items-start">
-                <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                Architecture Design Consultancy Services
-              </li>
-              <li className="flex items-start">
-                <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                Urban Design and Strategy Consultancy Service
-              </li>
-              <li className="flex items-start">
-                <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                Interior Architecture Consultancy Service
-              </li>
-              <li className="flex items-start">
-                <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                Landscape Architecture Consultancy Service
-              </li>
-              <li className="flex items-start">
-                <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                Hydro Spatial Strategy and Planning
-              </li>
-            </ul>
+
+            <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-light">
+              To design porously is to resist excess and allow space for nature
+              to settle - to shape not just enclosures, but invitations to
+              engage with your surroundings, in all their living, non-living,
+              and silent forms. It is a refusal to see architecture as a
+              finished product, but rather as an emerging ecosystem.
+            </p>
+
+            <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
+              Porous Being is a process of resistance to isolation, over
+              definition and sealed systems.
+            </p>
+          </div>
+
+          {/* Image section */}
+          <div className="mt-10 sm:mt-16 lg:mt-20">
+            <img
+              ref={mainImageRef}
+              src={pblImage}
+              alt="Architecture"
+              className="w-full h-48 sm:h-64 lg:h-96 rounded-lg object-cover"
+            />
+          </div>
+
+          {/* Scope of Work Section */}
+          <div className="mt-12 lg:mt-16">
+            <h2
+              ref={scopeTitleRef}
+              className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mb-6 lg:mb-8"
+            >
+              SCOPE OF WORK
+            </h2>
+
+            <div ref={scopeLeftRef} className="space-y-6 lg:space-y-8">
+              <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
+                In POROUSBEING, we offer comprehensive consultancy services
+                across multiple disciplines of design and planning. Our
+                integrated approach ensures seamless coordination between
+                architecture, landscape, and urban strategy.
+              </p>
+              <ul className="space-y-3 text-sm sm:text-base lg:text-lg text-gray-700">
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Architecture Design Consultancy Services
+                </li>
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Urban Design and Strategy Consultancy Service
+                </li>
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Interior Architecture Consultancy Service
+                </li>
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Landscape Architecture Consultancy Service
+                </li>
+                <li className="flex items-start">
+                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                  Hydro Spatial Strategy and Planning
+                </li>
+              </ul>
+              <br></br>
+              <img src={offImage} alt="Office Picture"></img>
+              <br></br>
+            </div>
           </div>
         </div>
       </div>

@@ -16,12 +16,12 @@ function App() {
 
   const handleLandingComplete = () => {
     setShowLanding(false);
-    sessionStorage.setItem('hasSeenLanding', 'true');
+    sessionStorage.setItem("hasSeenLanding", "true");
   };
 
   return (
     <Router>
-      {showLanding && <Landing onComplete={handleLandingComplete} />}
+      {/* {showLanding && <Landing onComplete={handleLandingComplete} />} */}
       <Navbar />
       <Routes>
         <Route path="/" element={<Projects />} /> {/* Home page */}

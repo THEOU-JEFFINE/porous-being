@@ -165,7 +165,7 @@ export default function HorizontalScrollGallery({
     setIsLoaded(true);
   }, []);
 
-  // Add smooth scroll-based scaling animation
+  // Add smooth scroll-based scaling animation - DISABLED
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -173,58 +173,10 @@ export default function HorizontalScrollGallery({
     const items = el.querySelectorAll(".gallery-item");
     if (!items.length) return;
 
-    let scrollTimeout;
+    // Set all items to scale 1 (no scaling effect)
+    gsap.set(items, { scale: 1 });
 
-    const handleScroll = () => {
-      // Clear existing timeout
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-
-      const scrollLeft = el.scrollLeft;
-      const containerWidth = el.clientWidth;
-      const centerPoint = scrollLeft + containerWidth / 2;
-
-      items.forEach((item) => {
-        const itemRect = item.getBoundingClientRect();
-        const containerRect = el.getBoundingClientRect();
-        const itemCenter =
-          itemRect.left - containerRect.left + itemRect.width / 2;
-        const distance = Math.abs(centerPoint - (scrollLeft + itemCenter));
-        const maxDistance = containerWidth;
-
-        // Calculate scale based on distance from center (0.92 to 1.0)
-        const normalizedDistance = Math.min(distance / maxDistance, 1);
-        const scale = 1 - normalizedDistance * 0.08;
-
-        // Apply smooth scaling with GSAP
-        gsap.to(item, {
-          scale: scale,
-          duration: 0.3,
-          ease: "power2.out",
-          overwrite: "auto",
-        });
-      });
-
-      // Reset all items to scale 1 after scrolling stops
-      scrollTimeout = setTimeout(() => {
-        items.forEach((item) => {
-          gsap.to(item, {
-            scale: 1,
-            duration: 0.4,
-            ease: "power2.out",
-            overwrite: "auto",
-          });
-        });
-      }, 150);
-    };
-
-    // Initial scale calculation
-    handleScroll();
-
-    el.addEventListener("scroll", handleScroll);
-    return () => {
-      el.removeEventListener("scroll", handleScroll);
-      if (scrollTimeout) clearTimeout(scrollTimeout);
-    };
+    // No scroll handler needed - scaling effect removed
   }, []);
 
   // If intro is provided, add it as the first item

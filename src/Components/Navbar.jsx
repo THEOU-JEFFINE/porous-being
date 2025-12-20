@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { gsap } from "gsap";
-import Logo from "../assets/Porous_Logo.jpeg";
+import Logo from "../assets/Porous_Logo.png";
 
 export default function Navbar() {
   const location = useLocation();
@@ -33,14 +33,15 @@ export default function Navbar() {
         y: -100,
         opacity: 0,
         duration: 0.8,
-        ease: "power3.out"
+        ease: "power3.out",
       });
 
       // Logo pulse animation
-      gsap.fromTo(logoRef.current,
+      gsap.fromTo(
+        logoRef.current,
         {
           scale: 0.8,
-          opacity: 0
+          opacity: 0,
         },
         {
           scale: 1,
@@ -55,9 +56,9 @@ export default function Navbar() {
               duration: 0.8,
               ease: "power1.inOut",
               yoyo: true,
-              repeat: -1
+              repeat: -1,
             });
-          }
+          },
         }
       );
 
@@ -68,7 +69,7 @@ export default function Navbar() {
         duration: 0.6,
         stagger: 0.1,
         ease: "power2.out",
-        delay: 0.5
+        delay: 0.5,
       });
     });
 
@@ -80,7 +81,7 @@ export default function Navbar() {
       y: isEnter ? -3 : 0,
       scale: isEnter ? 1.05 : 1,
       duration: 0.3,
-      ease: "power2.out"
+      ease: "power2.out",
     });
   };
 
@@ -90,7 +91,7 @@ export default function Navbar() {
         scale: 1.15,
         duration: 0.3,
         ease: "power2.out",
-        overwrite: true
+        overwrite: true,
       });
     } else {
       gsap.to(logoRef.current, {
@@ -98,15 +99,17 @@ export default function Navbar() {
         duration: 0.8,
         ease: "power1.inOut",
         yoyo: true,
-        repeat: -1
+        repeat: -1,
       });
     }
   };
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur shadow-sm">
+    <header
+      ref={headerRef}
+      className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur shadow-sm"
+    >
       <div className="flex items-center justify-between px-4 py-2 md:px-6 lg:px-8 lg:py-3 relative">
-
         {/* Logo */}
         <div className="flex items-center">
           <Link

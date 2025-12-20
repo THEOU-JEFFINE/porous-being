@@ -12,32 +12,12 @@ export default function News() {
   const newsItemsRef = useRef([]);
 
   const categories = ["NEWS", "EVENTS", "AWARDS", "LECTURES"];
-  const newsItems = [
-    {
-      date: "16.10.2025",
-      image: img1,
-      title:
-        "THE BLOOMBERG STUDENT CENTER, A CASCADING VILLAGE OF TIMBER PAVILIONS",
-      description:
-        "A new era of student life has begun at Johns Hopkins University with the opening of the Bloomberg Student Center, a mass timber village designed in collaboration with Shepley Bulfinch and Rockwell Group. As the first student center for Johns Hopkins University, the 150,000-sq-ft building provides a central gathering space for the university’s Homewood campus...",
-    },
-    {
-      date: "16.10.2025",
-      image: img1,
-      title:
-        "THE BLOOMBERG STUDENT CENTER, A CASCADING VILLAGE OF TIMBER PAVILIONS",
-      description:
-        "A new era of student life has begun at Johns Hopkins University with the opening of the Bloomberg Student Center, a mass timber village designed in collaboration with Shepley Bulfinch and Rockwell Group. As the first student center for Johns Hopkins University, the 150,000-sq-ft building provides a central gathering space for the university’s Homewood campus...",
-    },
-    {
-      date: "16.10.2025",
-      image: img1,
-      title:
-        "THE BLOOMBERG STUDENT CENTER, A CASCADING VILLAGE OF TIMBER PAVILIONS",
-      description:
-        "A new era of student life has begun at Johns Hopkins University with the opening of the Bloomberg Student Center, a mass timber village designed in collaboration with Shepley Bulfinch and Rockwell Group. As the first student center for Johns Hopkins University, the 150,000-sq-ft building provides a central gathering space for the university’s Homewood campus...",
-    },
-  ];
+  const newsItems = [];
+
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
 
   useEffect(() => {
     const ctx = gsap.context(() => {
@@ -51,7 +31,7 @@ export default function News() {
         y: 0,
         opacity: 1,
         duration: 1.2,
-        ease: "power4.out"
+        ease: "power4.out",
       });
 
       // Categories stagger animation (desktop)
@@ -61,7 +41,7 @@ export default function News() {
         duration: 0.6,
         stagger: 0.1,
         ease: "power2.out",
-        delay: 0.3
+        delay: 0.3,
       });
 
       // Mobile categories stagger animation
@@ -71,7 +51,7 @@ export default function News() {
         duration: 0.6,
         stagger: 0.1,
         ease: "power2.out",
-        delay: 0.3
+        delay: 0.3,
       });
 
       // News items scroll-triggered animations
@@ -85,8 +65,8 @@ export default function News() {
             scrollTrigger: {
               trigger: item,
               start: "top bottom-=100",
-              toggleActions: "play none none reverse"
-            }
+              toggleActions: "play none none reverse",
+            },
           });
 
           // Animate children elements
@@ -102,8 +82,8 @@ export default function News() {
               scrollTrigger: {
                 trigger: item,
                 start: "top bottom-=100",
-                toggleActions: "play none none reverse"
-              }
+                toggleActions: "play none none reverse",
+              },
             });
           }
 
@@ -117,8 +97,8 @@ export default function News() {
               scrollTrigger: {
                 trigger: item,
                 start: "top bottom-=100",
-                toggleActions: "play none none reverse"
-              }
+                toggleActions: "play none none reverse",
+              },
             });
           }
         }
@@ -133,14 +113,14 @@ export default function News() {
       x: isEnter ? 5 : 0,
       color: isEnter ? "#000000" : "",
       duration: 0.3,
-      ease: "power2.out"
+      ease: "power2.out",
     });
   };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen px-4 md:px-6 lg:px-12 xl:px-24">
       {/* Sidebar - Desktop (lg only) */}
-      <div className="hidden lg:flex w-1/6 flex-col gap-4 text-gray-600 fixed left-6 xl:left-8 top-1/2 -translate-y-1/2">
+      {/* <div className="hidden lg:flex w-1/6 flex-col gap-4 text-gray-600 fixed left-6 xl:left-8 top-1/2 -translate-y-1/2">
         {categories.map((cat, idx) => (
           <div
             key={idx}
@@ -154,31 +134,42 @@ export default function News() {
             {cat}
           </div>
         ))}
-      </div>
+      </div> */}
 
       {/* Mobile + Tablet Categories (Top) */}
 
-
       {/* Main Content */}
       <div className="flex-1 lg:ml-24 xl:ml-32 max-w-6xl">
-        <h1 ref={titleRef} className="mt-12 text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 lg:mb-12 xl:mb-16">
+        <h1
+          ref={titleRef}
+          className="mt-12 text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 lg:mb-12 xl:mb-16"
+        >
           NEWS
         </h1>
-
-        {/* Mobile + Tablet Categories (Top) */}
-        <div className="flex lg:hidden overflow-x-auto gap-4 text-gray-600 mb-6">
-        {categories.map((cat, idx) => (
-          <div
-            key={idx}
-            ref={(el) => (mobileCategoriesRef.current[idx] = el)}
-            className={`cursor-pointer whitespace-nowrap ${
-              idx === 0 ? "font-bold" : ""
-            }`}
-          >
-            {cat}
+        {!newsItems.length && (
+          <div lassName="flex-1 lg:ml-24 xl:ml-32 max-w-6xl">
+            <h3
+              ref={titleRef}
+              className="text-gray-600 mt-12 text-3xl md:text-2xl lg:text-4xl xl:text-5xl font-light mb-8 lg:mb-12 xl:mb-16"
+            >
+              Coming Soon...
+            </h3>
           </div>
-        ))}
-      </div>
+        )}
+        {/* Mobile + Tablet Categories (Top) */}
+        {/* <div className="flex lg:hidden overflow-x-auto gap-4 text-gray-600 mb-6">
+          {categories.map((cat, idx) => (
+            <div
+              key={idx}
+              ref={(el) => (mobileCategoriesRef.current[idx] = el)}
+              className={`cursor-pointer whitespace-nowrap ${
+                idx === 0 ? "font-bold" : ""
+              }`}
+            >
+              {cat}
+            </div>
+          ))}
+        </div> */}
 
         <div className="flex flex-col gap-12 lg:gap-14 xl:gap-16 pr-4 lg:pr-8">
           {newsItems.map((item, idx) => (
@@ -201,12 +192,12 @@ export default function News() {
 
               {/* Text */}
               <div className="flex-1 news-text-content">
-                <h2 className="text-lg lg:text-xl xl:text-2xl font-normal mb-3 lg:mb-4 leading-tight">
+                <h2 className="text-justify text-lg lg:text-xl xl:text-2xl font-normal mb-3 lg:mb-4 leading-tight">
                   {item.title}
                 </h2>
-                <p className="text-gray-600 text-sm lg:text-base leading-relaxed line-clamp-4 lg:line-clamp-5 mb-3">
-  {item.description}
-</p>
+                <p className="text-justify text-gray-600 text-sm lg:text-base leading-relaxed line-clamp-4 lg:line-clamp-5 mb-3">
+                  {item.description}
+                </p>
 
                 <button className="text-sm font-medium text-gray-800 hover:underline transition-all duration-300 hover:translate-x-2">
                   READ MORE +

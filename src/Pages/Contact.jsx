@@ -12,6 +12,49 @@ export default function Contact() {
   const formFieldsRef = useRef([]);
   const mapRef = useRef(null);
 
+  // Scroll to top on component mount
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+
+  // Handle form submission
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    const formData = new FormData(e.target);
+    const data = {
+      name: formData.get("name"),
+      email: formData.get("email"),
+      phone: formData.get("phone"),
+      purpose: formData.get("purpose"),
+      projectType: formData.get("projectType"),
+      message: formData.get("message"),
+    };
+
+    // Create mailto link with all the information
+    const subject = encodeURIComponent(
+      `New Contact Form Submission from ${data.name}`
+    );
+    const body = encodeURIComponent(
+      `Name: ${data.name}\n` +
+        `Email: ${data.email}\n` +
+        `Phone: ${data.phone}\n` +
+        `Purpose: ${data.purpose}\n` +
+        `Project Type: ${data.projectType}\n\n` +
+        `Message:\n${data.message}`
+    );
+
+    const mailtoLink = `mailto:udhay@porousbeing.com,suresh@porousbeing.com?subject=${subject}&body=${body}`;
+
+    // Open mailto link
+    window.location.href = mailtoLink;
+
+    // Optional: Reset form after submission
+    setTimeout(() => {
+      e.target.reset();
+    }, 1000);
+  };
+
   useEffect(() => {
     const ctx = gsap.context(() => {
       // Title animation
@@ -72,23 +115,23 @@ export default function Contact() {
     {
       title: "VISIT US",
       details: [
-        "123 Business Avenue",
-        "Suite 456, Floor 7",
-        "New York, NY 10001",
-        "United States",
+        "No. 2 Susila Nagar,",
+        "behind NSN Matriculation School,",
+        "Chromepet,",
+        "Chennai-600044",
       ],
     },
     {
       title: "CONTACT",
       details: [
-        "hello@porousbeing.com",
-        "careers@porousbeing.com",
-        "+1 (555) 123-4567",
+        "udhay@porousbeing.com",
+        "suresh@porousbeing.com",
+        "+91 90805 94783",
       ],
     },
     {
       title: "FOLLOW",
-      details: ["Instagram", "LinkedIn", "Facebook", "Vimeo"],
+      details: ["Instagram"],
     },
   ];
 
@@ -127,7 +170,18 @@ export default function Contact() {
                       key={detailIdx}
                       className="text-sm sm:text-base text-gray-700 hover:text-black transition-colors cursor-pointer"
                     >
-                      {detail}
+                      {detail === "Instagram" ? (
+                        <a
+                          href="https://www.instagram.com/porous_being?utm_source=ig_web_button_share_sheet&igsh=ZDNlZDc0MzIxNw=="
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="hover:underline"
+                        >
+                          {detail}
+                        </a>
+                      ) : (
+                        detail
+                      )}
                     </p>
                   ))}
                 </div>
@@ -149,13 +203,15 @@ export default function Contact() {
 
           {/* Right Column - Contact Form */}
           <div ref={rightColumnRef}>
-            <form className="space-y-6">
+            <form className="space-y-6" onSubmit={handleSubmit}>
               <div ref={(el) => (formFieldsRef.current[0] = el)}>
                 <label className="block text-xs font-bold tracking-wider text-black mb-2">
-                  YOUR NAME
+                  YOUR NAME <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="text"
+                  name="name"
+                  required
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base"
                   placeholder="John Doe"
                 />
@@ -163,10 +219,12 @@ export default function Contact() {
 
               <div ref={(el) => (formFieldsRef.current[1] = el)}>
                 <label className="block text-xs font-bold tracking-wider text-black mb-2">
-                  EMAIL ADDRESS
+                  EMAIL ADDRESS <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="email"
+                  name="email"
+                  required
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base"
                   placeholder="john@example.com"
                 />
@@ -174,10 +232,12 @@ export default function Contact() {
 
               <div ref={(el) => (formFieldsRef.current[2] = el)}>
                 <label className="block text-xs font-bold tracking-wider text-black mb-2">
-                  PHONE NUMBER
+                  PHONE NUMBER <span className="text-red-600">*</span>
                 </label>
                 <input
                   type="tel"
+                  name="phone"
+                  required
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base"
                   placeholder="+1 (555) 123-4567"
                 />
@@ -185,9 +245,13 @@ export default function Contact() {
 
               <div ref={(el) => (formFieldsRef.current[3] = el)}>
                 <label className="block text-xs font-bold tracking-wider text-black mb-2">
-                  PURPOSE
+                  PURPOSE <span className="text-red-600">*</span>
                 </label>
-                <select className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base cursor-pointer">
+                <select
+                  name="purpose"
+                  required
+                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base cursor-pointer"
+                >
                   <option value="">Select purpose</option>
                   <option>Student</option>
                   <option>Intern</option>
@@ -198,9 +262,14 @@ export default function Contact() {
 
               <div ref={(el) => (formFieldsRef.current[4] = el)}>
                 <label className="block text-xs font-bold tracking-wider text-black mb-2">
-                  PROJECT TYPE
+                  PROJECT TYPE <span className="text-red-600">*</span>
                 </label>
-                <select className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base cursor-pointer">
+                <select
+                  name="projectType"
+                  required
+                  className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base cursor-pointer"
+                >
+                  <option value="">Select project type</option>
                   <option>Residential</option>
                   <option>Commercial</option>
                   <option>Landscape</option>
@@ -214,6 +283,7 @@ export default function Contact() {
                   MESSAGE
                 </label>
                 <textarea
+                  name="message"
                   rows="5"
                   className="w-full px-0 py-3 border-b-2 border-gray-300 focus:border-black outline-none transition-colors bg-transparent text-base resize-none"
                   placeholder="Tell us about your project..."
@@ -241,33 +311,16 @@ export default function Contact() {
           ref={mapRef}
           className="w-full h-96 lg:h-[500px] bg-gray-200 rounded-none overflow-hidden"
         >
-          <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-300">
-            <div className="text-center">
-              <div className="w-16 h-16 mx-auto mb-4 border-2 border-black flex items-center justify-center">
-                <svg
-                  className="w-8 h-8"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                  />
-                </svg>
-              </div>
-              <p className="text-sm font-medium text-gray-700">MAP LOCATION</p>
-              <p className="text-xs text-gray-500 mt-1">New York, NY 10001</p>
-            </div>
-          </div>
+          <iframe
+            src="https://maps.google.com/maps?q=POROUS+BEING+Chennai&t=&z=15&ie=UTF8&iwloc=&output=embed"
+            width="100%"
+            height="100%"
+            style={{ border: 0 }}
+            allowFullScreen=""
+            loading="lazy"
+            referrerPolicy="no-referrer-when-downgrade"
+            title="Office Location"
+          ></iframe>
         </div>
       </div>
     </div>

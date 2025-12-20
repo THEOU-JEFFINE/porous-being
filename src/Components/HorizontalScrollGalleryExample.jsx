@@ -403,65 +403,62 @@ export default function HorizontalScrollGalleryExample() {
     }
   }, []);
 
-  // GSAP scroll animation - scale down during scroll, reset after scroll stops
+  // GSAP scroll animation - zoom out while scrolling, normal when stopped
   React.useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     let scrollTimeout;
+    let isScrolling = false;
 
     const handleScroll = () => {
-      const scrollTop = container.scrollTop;
-      const windowHeight = window.innerHeight;
-      const centerY = scrollTop + windowHeight / 2;
+      // Mark as scrolling and apply zoom-out effect
+      if (!isScrolling) {
+        isScrolling = true;
 
-      Object.entries(projectRefs.current).forEach(([, ref]) => {
-        if (!ref) return;
+        // Zoom out all projects while scrolling
+        Object.entries(projectRefs.current).forEach(([, ref]) => {
+          if (!ref) return;
 
-        const rect = ref.getBoundingClientRect();
-        const elementCenter = rect.top + rect.height / 2 + scrollTop;
-        const distance = Math.abs(centerY - elementCenter);
-        const maxDistance = windowHeight;
-
-        // Calculate scale based on distance from center
-        // Items at center: scale 1, items away from center: scale down to 0.92
-        const normalizedDistance = Math.min(distance / maxDistance, 1);
-        const scale = 1 - normalizedDistance * 0.08; // Scale from 0.92 to 1.0
-        const opacity = 1;
-
-        gsap.to(ref, {
-          scale,
-          opacity,
-          duration: 0.3,
-          ease: "power2.out",
+          gsap.to(ref, {
+            scale: 0.75,
+            opacity: 0.5,
+            filter: "blur(3px)",
+            duration: 0.2,
+            ease: "power2.out",
+            transformOrigin: "center center",
+          });
         });
-      });
+      }
 
       // Clear existing timeout
       clearTimeout(scrollTimeout);
 
-      // Reset all items to scale 1 after scrolling stops
+      // Reset all items to normal after scrolling stops
       scrollTimeout = setTimeout(() => {
+        isScrolling = false;
+
         Object.entries(projectRefs.current).forEach(([, ref]) => {
           if (!ref) return;
           gsap.to(ref, {
             scale: 1,
             opacity: 1,
-            duration: 0.5,
+            filter: "blur(0px)",
+            duration: 0.4,
             ease: "power2.out",
+            transformOrigin: "center center",
           });
         });
       }, 150);
     };
 
     container.addEventListener("scroll", handleScroll);
-    handleScroll(); // Initial call
 
     return () => {
       container.removeEventListener("scroll", handleScroll);
       clearTimeout(scrollTimeout);
     };
-  }, []);
+  }, [filteredProjects]);
 
   if (!componentData || componentData.length === 0) {
     return (

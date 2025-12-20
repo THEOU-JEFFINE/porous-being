@@ -1,7 +1,6 @@
 import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
-import img1 from "../assets/45.png";
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -11,7 +10,7 @@ export default function News() {
   const mobileCategoriesRef = useRef([]);
   const newsItemsRef = useRef([]);
 
-  const categories = ["NEWS", "EVENTS", "AWARDS", "LECTURES"];
+  // const categories = ["NEWS", "EVENTS", "AWARDS", "LECTURES"];
   const newsItems = [];
 
   // Scroll to top on component mount
@@ -55,7 +54,7 @@ export default function News() {
       });
 
       // News items scroll-triggered animations
-      newsItemsRef.current.forEach((item, index) => {
+      newsItemsRef.current.forEach((item) => {
         if (item) {
           gsap.from(item, {
             y: 80,
@@ -108,14 +107,14 @@ export default function News() {
     return () => ctx.revert();
   }, []);
 
-  const handleCategoryHover = (e, isEnter) => {
-    gsap.to(e.currentTarget, {
-      x: isEnter ? 5 : 0,
-      color: isEnter ? "#000000" : "",
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
+  // const handleCategoryHover = (e, isEnter) => {
+  //   gsap.to(e.currentTarget, {
+  //     x: isEnter ? 5 : 0,
+  //     color: isEnter ? "#000000" : "",
+  //     duration: 0.3,
+  //     ease: "power2.out",
+  //   });
+  // };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen px-4 md:px-6 lg:px-12 xl:px-24">

@@ -30,7 +30,9 @@ const Footer = () => {
       }
 
       // Stagger animate footer content items
-      const validItems = contentItemsRef.current.filter(item => item !== null);
+      const validItems = contentItemsRef.current.filter(
+        (item) => item !== null
+      );
       if (validItems.length > 0) {
         gsap.from(validItems, {
           y: 20,
@@ -50,7 +52,7 @@ const Footer = () => {
 
     return () => {
       ctx.revert();
-      ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
     };
   }, []);
 

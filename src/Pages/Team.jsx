@@ -106,13 +106,13 @@ export default function Teams() {
     }
   };
 
-  const handleCategoryHover = (e, isEnter) => {
-    gsap.to(e.currentTarget, {
-      x: isEnter ? 8 : 0,
-      duration: 0.3,
-      ease: "power2.out",
-    });
-  };
+  // const handleCategoryHover = (e, isEnter) => {
+  //   gsap.to(e.currentTarget, {
+  //     x: isEnter ? 8 : 0,
+  //     duration: 0.3,
+  //     ease: "power2.out",
+  //   });
+  // };
 
   return (
     <div className="flex flex-col lg:flex-row min-h-screen px-4 md:px-6 lg:px-12 xl:px-24">

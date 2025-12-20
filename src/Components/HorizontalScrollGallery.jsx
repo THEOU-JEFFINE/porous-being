@@ -219,7 +219,7 @@ export default function HorizontalScrollGallery({
 
                   {/* Title, location, year */}
                   <div className="flex flex-col items-end gap-6 w-full">
-                    <h1 className="text-[1.3rem] font-normal text-end tracking-tight leading-tight">
+                    <h1 className="text-[1.3rem] font-normal text-end tracking-tight leading-tight max-w-[300px]">
                       {item.title}
                     </h1>
                     <div className="text-base text-gray-400 text-end tracking-wide uppercase leading-tight">

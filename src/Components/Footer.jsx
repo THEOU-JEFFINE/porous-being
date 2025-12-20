@@ -103,7 +103,9 @@ const Footer = () => {
                   href="mailto:info@porousbeing.com"
                   className="hover:text-black transition-colors"
                 >
-                  info@porousbeing.com
+                  <span>udhay@porousbeing.com</span>
+                  <br></br>
+                  <span>suresh@porousbeing.com</span>
                 </a>
               </p>
             </div>

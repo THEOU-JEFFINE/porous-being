@@ -204,6 +204,32 @@ function ProjectGalleryWrapper({
     return () => container.removeEventListener("scroll", handleScroll);
   }, [isScrolled, onSetScrolled]);
 
+  // Enable horizontal scroll with mouse wheel when hovering over active component
+  React.useEffect(() => {
+    const container = galleryRef.current;
+    if (!container || !isActive) return;
+
+    const handleWheel = (e) => {
+      // Check if there's horizontal scroll space
+      const hasHorizontalScroll = container.scrollWidth > container.clientWidth;
+
+      if (hasHorizontalScroll) {
+        // Prevent default vertical scroll
+        e.preventDefault();
+        e.stopPropagation();
+        // Convert vertical scroll to horizontal
+        container.scrollLeft += e.deltaY;
+      }
+    };
+
+    // Attach wheel listener directly to container
+    container.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      container.removeEventListener("wheel", handleWheel);
+    };
+  }, [isActive]);
+
   const intro = React.useMemo(() => {
     if (!isActive) return null;
     return {
@@ -333,9 +359,9 @@ function ProjectGalleryWrapper({
     <div className="w-full flex flex-col items-center gap-4 py-8">
       <div
         ref={galleryRef}
-        className={`transition-all duration-500 ease-in-out rounded ${
+        className={`transition-all duration-500 ease-in-out rounded overflow-x-auto ${
           isScrolled
-            ? "fixed inset-0 w-screen h-screen z-50 overflow-x-auto rounded-none"
+            ? "fixed inset-0 w-screen h-screen z-50 rounded-none"
             : "w-screen h-[500px] relative z-40"
         }`}
       >
@@ -355,7 +381,7 @@ function ProjectGalleryWrapper({
  * Main component rendering all 12 project galleries
  */
 export default function HorizontalScrollGalleryExample() {
-  const [activeProjectIds, setActiveProjectIds] = React.useState(new Set());
+  const [activeProjectId, setActiveProjectId] = React.useState(null);
   const [scrolledProjectId, setScrolledProjectId] = React.useState(null);
   const [selectedTypology, setSelectedTypology] = React.useState("ALL");
   const containerRef = React.useRef(null);
@@ -376,14 +402,13 @@ export default function HorizontalScrollGalleryExample() {
   }, [selectedTypology]);
 
   const toggleActive = React.useCallback((projectKey) => {
-    setActiveProjectIds((prev) => {
-      const newSet = new Set(prev);
-      if (newSet.has(projectKey)) {
-        newSet.delete(projectKey);
-      } else {
-        newSet.add(projectKey);
+    setActiveProjectId((prev) => {
+      // If clicking the same project, deactivate it
+      if (prev === projectKey) {
+        return null;
       }
-      return newSet;
+      // Otherwise, activate the clicked project (deactivating any other)
+      return projectKey;
     });
 
     // Scroll to center the clicked project
@@ -504,7 +529,7 @@ export default function HorizontalScrollGalleryExample() {
             >
               <ProjectGalleryWrapper
                 project={project}
-                isActive={activeProjectIds.has(project.key)}
+                isActive={activeProjectId === project.key}
                 isScrolled={scrolledProjectId === project.key}
                 onSetActive={() => toggleActive(project.key)}
                 onSetScrolled={() => setScrolledProjectId(project.key)}

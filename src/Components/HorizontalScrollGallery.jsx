@@ -151,6 +151,35 @@ export default function HorizontalScrollGallery({
     };
   }, []);
 
+  // Enable horizontal scroll with mouse wheel
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+
+    const handleWheel = (e) => {
+      // Check if there's horizontal scroll space
+      const hasHorizontalScroll = el.scrollWidth > el.clientWidth;
+
+      if (hasHorizontalScroll) {
+        // Prevent default vertical scroll
+        e.preventDefault();
+        e.stopPropagation();
+        // Convert vertical scroll to horizontal
+        el.scrollLeft += e.deltaY;
+
+        // Update scroll refs
+        currentScroll.current = el.scrollLeft;
+        targetScroll.current = el.scrollLeft;
+      }
+    };
+
+    el.addEventListener("wheel", handleWheel, { passive: false });
+
+    return () => {
+      el.removeEventListener("wheel", handleWheel);
+    };
+  }, []);
+
   // Initialize with full opacity - no fade animations
   useEffect(() => {
     const el = containerRef.current;

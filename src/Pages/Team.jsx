@@ -197,7 +197,7 @@ export default function Teams() {
                     <img
                       src={p.image}
                       alt={p.name}
-                      className="w-full h-auto object-cover rounded-lg shadow-lg mb-4"
+                      className="w-3/4 mx-auto h-auto object-cover rounded-lg shadow-lg mb-4"
                     />
                     <h3 className="text-xl font-semibold mb-2">{p.name}</h3>
                     <p className="text-gray-600 text-sm mb-3">
@@ -220,25 +220,29 @@ export default function Teams() {
             className="hidden lg:block flex-[3]"
             style={{ opacity: 0, transform: "translateX(100px)" }}
           >
-            <img
-              src={people[activePerson].image}
-              alt={people[activePerson].name}
-              className="w-full max-w-2xl h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl"
-            />
+            <div className="max-w-2xl mx-auto">
+              <img
+                src={people[activePerson].image}
+                alt={people[activePerson].name}
+                className="w-full max-w-md mx-auto h-auto object-cover rounded-lg shadow-lg transition-all duration-300 hover:shadow-2xl"
+              />
 
-            <div className="mt-6 max-w-2xl">
-              <h2 className="text-2xl font-semibold mb-2">
-                {people[activePerson].name}
-              </h2>
-              <p className="text-gray-600 text-base mb-4">
-                {people[activePerson].role}, {people[activePerson].location}
-              </p>
-              <div className=" text-justify text-gray-700 text-sm leading-relaxed space-y-3">
-                {people[activePerson].bio.split("\n\n").map((paragraph, i) => (
-                  <p key={i}>{paragraph}</p>
-                ))}
+              <div className="mt-6">
+                <h2 className="text-2xl font-semibold mb-2">
+                  {people[activePerson].name}
+                </h2>
+                <p className="text-gray-600 text-base mb-4">
+                  {people[activePerson].role}, {people[activePerson].location}
+                </p>
+                <div className=" text-justify text-gray-700 text-sm leading-relaxed space-y-3">
+                  {people[activePerson].bio
+                    .split("\n\n")
+                    .map((paragraph, i) => (
+                      <p key={i}>{paragraph}</p>
+                    ))}
+                </div>
+                <br></br>
               </div>
-              <br></br>
             </div>
           </div>
         </div>

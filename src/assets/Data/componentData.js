@@ -206,9 +206,9 @@ const componentData = [
     title: "Kanyakumari Bridge",
     location: "Kanyakumari, INDIA",
     year: "2020",
-    typology: "UNBUILT",
+    typology: "EXPERIENCE CENTRE",
     size: "—",
-    status: "PROPOSAL",
+    status: "UNBUILT",
     images: imgs_unbuilt_kanyakumari,
   },
 

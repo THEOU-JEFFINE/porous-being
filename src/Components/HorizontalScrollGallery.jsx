@@ -33,6 +33,8 @@ export default function HorizontalScrollGallery({
   height = "h-[80vh]",
   className = "",
   intro = null,
+  isActive = false,
+  isMobile = false,
 }) {
   const scrollRef = useRef(null);
   const containerRef = useRef(null);
@@ -226,7 +228,9 @@ export default function HorizontalScrollGallery({
         onPointerCancel={onPointerUp}
       >
         <div
-          className="flex h-full items-stretch gap-0"
+          className={`flex h-full items-stretch ${
+            isActive ? "gap-2" : "gap-0"
+          }`}
           style={{ width: "auto" }}
         >
           {galleryItems.map((item, index) => (

@@ -2,58 +2,81 @@ import React, { useEffect, useRef } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 
-gsap.registerPlugin(ScrollTrigger);
-
 const Footer = () => {
   const footerRef = useRef(null);
   const contentItemsRef = useRef([]);
 
   useEffect(() => {
-    // Ensure ScrollTrigger is properly initialized
-    ScrollTrigger.refresh();
-
-    const ctx = gsap.context(() => {
-      // Check if elements exist before animating
-      if (footerRef.current) {
-        gsap.from(footerRef.current, {
-          y: 30,
-          opacity: 0,
-          duration: 0.8,
-          ease: "power3.out",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top bottom-=50",
-            toggleActions: "play none none none",
-            once: true, // Only animate once
-          },
-        });
+    try {
+      if (typeof window !== "undefined" && ScrollTrigger) {
+        gsap.registerPlugin(ScrollTrigger);
       }
 
-      // Stagger animate footer content items
-      const validItems = contentItemsRef.current.filter(
-        (item) => item !== null
-      );
-      if (validItems.length > 0) {
-        gsap.from(validItems, {
-          y: 20,
-          opacity: 0,
-          duration: 0.6,
-          stagger: 0.1,
-          ease: "power2.out",
-          scrollTrigger: {
-            trigger: footerRef.current,
-            start: "top bottom-=50",
-            toggleActions: "play none none none",
-            once: true, // Only animate once
-          },
-        });
+      // Refresh if ScrollTrigger is available
+      if (ScrollTrigger && typeof ScrollTrigger.refresh === "function") {
+        ScrollTrigger.refresh();
       }
-    });
 
-    return () => {
-      ctx.revert();
-      ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-    };
+      const ctx = gsap.context(() => {
+        // Check if elements exist before animating
+        if (footerRef.current && gsap) {
+          gsap.from(footerRef.current, {
+            y: 30,
+            opacity: 0,
+            duration: 0.8,
+            ease: "power3.out",
+            scrollTrigger: ScrollTrigger
+              ? {
+                  trigger: footerRef.current,
+                  start: "top bottom-=50",
+                  toggleActions: "play none none none",
+                  once: true, // Only animate once
+                }
+              : undefined,
+          });
+        }
+
+        // Stagger animate footer content items
+        const validItems = contentItemsRef.current.filter(
+          (item) => item !== null
+        );
+        if (validItems.length > 0) {
+          gsap.from(validItems, {
+            y: 20,
+            opacity: 0,
+            duration: 0.6,
+            stagger: 0.1,
+            ease: "power2.out",
+            scrollTrigger: ScrollTrigger
+              ? {
+                  trigger: footerRef.current,
+                  start: "top bottom-=50",
+                  toggleActions: "play none none none",
+                  once: true, // Only animate once
+                }
+              : undefined,
+          });
+        }
+      });
+
+      return () => {
+        try {
+          ctx.revert();
+        } catch (e) {
+          // ignore
+        }
+        try {
+          if (ScrollTrigger && typeof ScrollTrigger.getAll === "function") {
+            ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
+          }
+        } catch (e) {
+          // ignore
+        }
+      };
+    } catch (err) {
+      // Prevent animation errors from breaking the footer render
+      console.error("Footer animation error:", err);
+    }
   }, []);
 
   const addItemToRef = (el, index) => {

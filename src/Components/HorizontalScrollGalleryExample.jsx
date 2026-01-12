@@ -387,19 +387,40 @@ export default function HorizontalScrollGalleryExample() {
   const containerRef = React.useRef(null);
   const projectRefs = React.useRef({});
 
-  // Get unique typologies from componentData
-  const typologies = React.useMemo(() => {
-    if (!componentData) return [];
-    const uniqueTypologies = new Set(componentData.map((p) => p.typology));
-    return ["ALL", ...Array.from(uniqueTypologies).sort()];
+  // Map raw typology strings into clustered categories
+  const mapToCategory = React.useCallback((typ) => {
+    // Treat unknown/other as Experience Centre (merged)
+    if (!typ) return "Experience Centre";
+    const t = String(typ).toLowerCase();
+    if (t.includes("resid")) return "Residential";
+    if (t.includes("retail")) return "Retail";
+    if (t.includes("office")) return "Office";
+    if (
+      t.includes("experience") ||
+      t.includes("centre") ||
+      t.includes("center") ||
+      t.includes("installation")
+    )
+      return "Experience Centre";
+    if (t.includes("signag") || t.includes("signage")) return "Signage";
+    return "Experience Centre";
   }, []);
 
-  // Filter projects based on selected typology
+  // Get unique clustered typologies from componentData
+  const typologies = React.useMemo(() => {
+    if (!componentData) return [];
+    const set = new Set(componentData.map((p) => mapToCategory(p.typology)));
+    return ["ALL", ...Array.from(set).sort()];
+  }, [mapToCategory]);
+
+  // Filter projects based on selected clustered typology
   const filteredProjects = React.useMemo(() => {
     if (!componentData) return [];
     if (selectedTypology === "ALL") return componentData;
-    return componentData.filter((p) => p.typology === selectedTypology);
-  }, [selectedTypology]);
+    return componentData.filter(
+      (p) => mapToCategory(p.typology) === selectedTypology
+    );
+  }, [selectedTypology, mapToCategory]);
 
   const toggleActive = React.useCallback((projectKey) => {
     setActiveProjectId((prev) => {
@@ -501,7 +522,7 @@ export default function HorizontalScrollGalleryExample() {
       {/* Filter Navigation Bar */}
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center gap-6 py-4 overflow-x-auto scrollbar-hide">
+          <div className="flex items-center justify-center gap-6 py-4 overflow-x-auto scrollbar-hide">
             {typologies.map((typology) => (
               <button
                 key={typology}

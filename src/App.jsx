@@ -21,7 +21,7 @@ function App() {
 
   return (
     <Router>
-      {showLanding && <Landing onComplete={handleLandingComplete} />}
+      {/* {showLanding && <Landing onComplete={handleLandingComplete} />} */}
       <Navbar />
       <Routes>
         <Route path="/" element={<Projects />} /> {/* Home page */}

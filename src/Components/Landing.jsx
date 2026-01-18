@@ -43,7 +43,7 @@ export default function Landing({ onComplete }) {
       <video
         ref={videoRef}
         src={loadingVideo}
-        className="w-full h-full object-contain"
+        className="w-auto h-auto max-w-[50%] max-h-[50%] object-contain"
         muted
         playsInline
         preload="auto"

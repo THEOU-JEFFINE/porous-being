@@ -124,7 +124,7 @@ function ProjectGalleryWrapper({
   // Detect screen size and auto-activate on mobile/tablet
   React.useEffect(() => {
     const checkMobile = () => {
-      const mobile = window.innerWidth <= 1024;
+      const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
     };
 
@@ -133,12 +133,12 @@ function ProjectGalleryWrapper({
     return () => window.removeEventListener("resize", checkMobile);
   }, []);
 
-  // Auto-activate on mobile
-  React.useEffect(() => {
-    if (isMobile && !isActive) {
-      onSetActive();
-    }
-  }, [isMobile, isActive, onSetActive]);
+  // // Auto-activate on mobile
+  // React.useEffect(() => {
+  //   if (isMobile && !isActive) {
+  //     onSetActive();
+  //   }
+  // }, [isMobile]);
 
   const projectImages = React.useMemo(() => {
     const images = project.images || [];
@@ -252,7 +252,7 @@ function ProjectGalleryWrapper({
     if (!projectItems || projectItems.length === 0) return projectItems;
     // On mobile: always insert intro after first image when active
     if (isMobile && intro && projectItems.length > 0 && isActive) {
-      return [projectItems[0], intro, ...projectItems.slice(1)];
+      return [intro, ...projectItems.slice(1)];
     }
     // On desktop: intro will be passed separately, so just return items
     return projectItems;
@@ -263,7 +263,8 @@ function ProjectGalleryWrapper({
       <div className="w-[400px] h-[250px] bg-gray-200 flex items-center justify-center cursor-pointer rounded">
         <div className="text-center">
           <p className="text-gray-600 font-medium">{project.title}</p>
-          <p className="text-gray-400 text-sm">No images available</p>
+          <p className="text-gray-400 text-xs sm:text-sm md:text-base
+">No images available</p>
         </div>
       </div>
     );
@@ -271,7 +272,7 @@ function ProjectGalleryWrapper({
 
   // When not active: show card layout (info left, centered image right)
   // On mobile/tablet, skip this and go straight to active state
-  if (!isActive && !isMobile) {
+  if (!isActive) {
     return (
       <div
         className="flex flex-col md:flex-row items-center md:items-start justify-center py-4 md:py-6 cursor-pointer group w-full"
@@ -285,7 +286,8 @@ function ProjectGalleryWrapper({
               <img
                 src={project.logo}
                 alt={project.title}
-                className="w-full h-full object-contain"
+                className="w-full h-auto object-cover"
+                loading="lazy"
               />
             </div>
           ) : (
@@ -297,7 +299,8 @@ function ProjectGalleryWrapper({
           )}
 
           {/* Title */}
-          <h3 className="text-sm  font-medium text-gray-900 mb-1 leading-tight">
+          <h3 className="text-xs sm:text-sm md:text-base
+  font-medium text-gray-900 mb-1 leading-tight">
             {project.title}
           </h3>
 
@@ -308,7 +311,9 @@ function ProjectGalleryWrapper({
         </div>
 
         {/* Center - Image */}
-        <div className="w-full md:w-[350px] lg:w-[400px] xl:w-[450px] overflow-hidden">
+        {/* <div className="w-full md:w-[350px] lg:w-[400px] xl:w-[450px] overflow-hidden"> */}
+        <div className="w-full h-[220px] sm:h-[260px] md:h-auto md:w-[350px] lg:w-[400px] xl:w-[450px] overflow-hidden">
+
           {firstImage ? (
             <img
               src={firstImage}
@@ -343,7 +348,8 @@ function ProjectGalleryWrapper({
               </span>
             </div>
           )}
-          <h3 className="text-sm font-medium text-gray-900 mb-1">
+          <h3 className="text-xs sm:text-sm md:text-base
+ font-medium text-gray-900 mb-1">
             {project.title}
           </h3>
           <p className="text-[10px] text-gray-400 uppercase tracking-wider">
@@ -355,26 +361,54 @@ function ProjectGalleryWrapper({
   }
 
   // When active: show expanded gallery
+if (isActive) {
   return (
     <div className="w-full flex flex-col items-center gap-4 py-8">
       <div
         ref={galleryRef}
-        className={`transition-all duration-500 ease-in-out rounded overflow-x-auto ${
+        className={`transition-all duration-500 ease-in-out rounded ${
           isScrolled
             ? "fixed inset-0 w-screen h-screen z-50 rounded-none"
-            : "w-screen h-[500px] relative z-40"
+            : "w-screen h-[320px] sm:h-[380px] md:h-[450px] lg:h-[500px] relative z-40"
         }`}
       >
         <HorizontalScrollGallery
           items={isMobile ? finalItems : projectItems}
-          height={isScrolled ? "h-screen" : "h-[500px]"}
+          height="h-full"
           intro={isMobile ? null : intro}
-          isActive={isActive}
-          isMobile={isMobile}
+          isActive={true}
         />
       </div>
     </div>
   );
+}
+// Mobile & Desktop inactive card
+if (!isActive) {
+  return (
+    <div
+      className="flex flex-col items-center justify-center py-6 cursor-pointer w-full"
+      onClick={onSetActive}
+    >
+      <div className="w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[400px] overflow-hidden">
+        {firstImage && (
+          <img
+            src={firstImage}
+            alt={project.title}
+            className="w-full h-auto object-cover rounded"
+          />
+        )}
+      </div>
+
+      <h3 className="mt-4 text-sm sm:text-base font-medium text-gray-900">
+        {project.title}
+      </h3>
+      <p className="text-[10px] uppercase tracking-wider text-gray-400">
+        {project.location}
+      </p>
+    </div>
+  );
+}
+
 }
 
 /**
@@ -431,14 +465,22 @@ export default function HorizontalScrollGalleryExample() {
       // Otherwise, activate the clicked project (deactivating any other)
       return projectKey;
     });
-
-    // Scroll to center the clicked project
-    setTimeout(() => {
-      const ref = projectRefs.current[projectKey];
-      if (ref) {
-        ref.scrollIntoView({ behavior: "smooth", block: "center" });
-      }
-    }, 100);
+    if (window.innerWidth >= 1024) {
+      setTimeout(() => {
+        const ref = projectRefs.current[projectKey];
+        if (ref) {
+          ref.scrollIntoView({ behavior: "smooth", block: "center" });
+        }
+      }, 100);
+    }
+    
+    // // Scroll to center the clicked project
+    // setTimeout(() => {
+    //   const ref = projectRefs.current[projectKey];
+    //   if (ref) {
+    //     ref.scrollIntoView({ behavior: "smooth", block: "center" });
+    //   }
+    // }, 100);
   }, []);
 
   React.useEffect(() => {
@@ -451,6 +493,7 @@ export default function HorizontalScrollGalleryExample() {
 
   // GSAP scroll animation - zoom out while scrolling, normal when stopped
   React.useEffect(() => {
+    if (window.innerWidth < 1024) return;
     const container = containerRef.current;
     if (!container) return;
 
@@ -521,7 +564,8 @@ export default function HorizontalScrollGalleryExample() {
     >
       {/* Filter Navigation Bar */}
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-12
+sm:px-6 lg:px-8">
           <div className="flex items-center justify-center gap-6 py-4 overflow-x-auto scrollbar-hide">
             {typologies.map((typology) => (
               <button
@@ -541,7 +585,8 @@ export default function HorizontalScrollGalleryExample() {
       </div>
 
       {/* Projects Grid */}
-      <div className="flex flex-col items-center pt-8 pb-16 px-4">
+      <div className="flex flex-col items-center pt-8 pb-16 px-3 sm:px-6 lg:px-12
+">
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
             <div

@@ -30,7 +30,7 @@ gsap.registerPlugin(ScrollTrigger);
  */
 export default function HorizontalScrollGallery({
   items = [],
-  height = "h-[80vh]",
+  height="h-[60vh] sm:h-[70vh] md:h-[80vh]",
   className = "",
   intro = null,
   isActive = false,
@@ -221,7 +221,9 @@ export default function HorizontalScrollGallery({
       {/* Horizontally scrollable container */}
       <div
         ref={scrollRef}
-        className="hide-scrollbar h-full w-full overflow-x-auto overflow-y-hidden cursor-grab active:cursor-grabbing"
+        className={`hide-scrollbar h-full w-full overflow-y-hidden ${
+          isActive ? "overflow-x-auto cursor-grab active:cursor-grabbing" : "overflow-x-hidden"
+        }`}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}
@@ -288,13 +290,13 @@ export default function HorizontalScrollGallery({
                 </div>
               ) : item.type === "image" ? (
                 // Image section
-                <figure className="relative h-full w-[85vw] sm:w-[70vw] md:w-auto overflow-hidden">
+                <figure className="relative h-full w-[90vw] sm:w-[75vw] md:w-auto overflow-hidden">
                   <img
                     src={item.src}
                     alt={item.alt || `Image ${index + 1}`}
                     className="h-full w-full sm:w-auto object-cover"
                     loading={index === 0 ? "eager" : "lazy"}
-                    fetchpriority={index === 0 ? "high" : undefined}
+                    fetchPriority={index === 0 ? "high" : undefined}
                   />
                 </figure>
               ) : item.type === "text" ? (

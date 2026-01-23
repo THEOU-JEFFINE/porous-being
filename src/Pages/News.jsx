@@ -146,7 +146,7 @@ export default function News() {
           NEWS
         </h1>
         {!newsItems.length && (
-          <div lassName="flex-1 lg:ml-24 xl:ml-32 max-w-6xl">
+          <div className="flex-1 lg:ml-24 xl:ml-32 max-w-6xl">
             <h3
               ref={titleRef}
               className="text-gray-600 mt-12 text-3xl md:text-2xl lg:text-4xl xl:text-5xl font-light mb-8 lg:mb-12 xl:mb-16"

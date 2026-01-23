@@ -429,6 +429,7 @@ export default function HorizontalScrollGalleryExample() {
     if (t.includes("resid")) return "Residential";
     if (t.includes("retail")) return "Retail";
     if (t.includes("office")) return "Office";
+    if (t.includes("installation")) return "Installation";
     if (
       t.includes("experience") ||
       t.includes("centre") ||

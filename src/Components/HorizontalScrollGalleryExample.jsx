@@ -425,21 +425,16 @@ export default function HorizontalScrollGalleryExample() {
 
   // Map raw typology strings into clustered categories
   const mapToCategory = React.useCallback((typ) => {
-    // Treat unknown/other as Experience Centre (merged)
     if (!typ) return "Experience Centre";
     const t = String(typ).toLowerCase();
     if (t.includes("resid")) return "Residential";
     if (t.includes("retail")) return "Retail";
     if (t.includes("office")) return "Office";
     if (t.includes("installation")) return "Installation";
-    if (
-      t.includes("experience") ||
-      t.includes("centre") ||
-      t.includes("center") ||
-      t.includes("installation")
-    )
+    if (t.includes("signag")) return "Signage";
+    if (t.includes("landscape")) return "Landscape";
+    if (t.includes("experience") || t.includes("centre") || t.includes("center"))
       return "Experience Centre";
-    if (t.includes("signag") || t.includes("signage")) return "Signage";
     return "Experience Centre";
   }, []);
 

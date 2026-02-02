@@ -439,11 +439,19 @@ export default function HorizontalScrollGalleryExample() {
   }, []);
 
   // Get unique clustered typologies from componentData
+  // Always include all categories, even if empty
   const typologies = React.useMemo(() => {
-    if (!componentData) return [];
-    const set = new Set(componentData.map((p) => mapToCategory(p.typology)));
-    return ["ALL", ...Array.from(set).sort()];
-  }, [mapToCategory]);
+    const allCategories = [
+      "Experience Centre",
+      "Installation",
+      "Office",
+      "Residential",
+      "Retail",
+      "Signage",
+      "Landscape",
+    ];
+    return ["ALL", ...allCategories];
+  }, []);
 
   // Filter projects based on selected clustered typology
   const filteredProjects = React.useMemo(() => {

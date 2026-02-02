@@ -102,15 +102,29 @@ export default function HorizontalScrollGallery({
     const dx = e.clientX - dragging.current.startX;
     const newScrollLeft = dragging.current.scrollLeft - dx;
 
-    // Use smooth animation for drag instead of direct scrollLeft
-    targetScroll.current = Math.max(
-      0,
-      Math.min(el.scrollWidth - el.clientWidth, newScrollLeft)
-    );
+    // Mobile: Direct 1:1 scroll (no animation, no jitter)
+    // Desktop: Smooth animation
+    const isMobileDevice = window.innerWidth <= 768;
 
-    // Start smooth animation if not already running
-    if (!rafId.current) {
-      rafId.current = requestAnimationFrame(smoothScroll);
+    if (isMobileDevice) {
+      // Simple, direct scroll - exactly what the user drags
+      el.scrollLeft = Math.max(
+        0,
+        Math.min(el.scrollWidth - el.clientWidth, newScrollLeft)
+      );
+      currentScroll.current = el.scrollLeft;
+      targetScroll.current = el.scrollLeft;
+    } else {
+      // Desktop: Use smooth animation
+      targetScroll.current = Math.max(
+        0,
+        Math.min(el.scrollWidth - el.clientWidth, newScrollLeft)
+      );
+
+      // Start smooth animation if not already running
+      if (!rafId.current) {
+        rafId.current = requestAnimationFrame(smoothScroll);
+      }
     }
 
     // Calculate velocity for momentum
@@ -130,9 +144,11 @@ export default function HorizontalScrollGallery({
     dragging.current.down = false;
     el.releasePointerCapture?.(e.pointerId);
 
-    // Apply momentum scrolling with gentler, more refined feel
-    if (Math.abs(velocity.current) > 0.1) {
-      const momentum = velocity.current * 200; // Reduced momentum multiplier for smoother feel
+    const isMobileDevice = window.innerWidth <= 768;
+
+    // Apply momentum scrolling only on desktop
+    if (!isMobileDevice && Math.abs(velocity.current) > 0.1) {
+      const momentum = velocity.current * 200;
       const maxScroll = el.scrollWidth - el.clientWidth;
       targetScroll.current = Math.max(
         0,
@@ -142,6 +158,7 @@ export default function HorizontalScrollGallery({
       if (rafId.current) cancelAnimationFrame(rafId.current);
       rafId.current = requestAnimationFrame(smoothScroll);
     }
+    // Mobile: No momentum, just stop where the user stops dragging
   };
 
   // Initialize scroll values only
@@ -157,7 +174,7 @@ export default function HorizontalScrollGallery({
     };
   }, []);
 
-  // Enable horizontal scroll with mouse wheel
+  // Enable horizontal scroll with mouse wheel (desktop only)
   useEffect(() => {
     const el = scrollRef.current;
     if (!el) return;
@@ -165,13 +182,14 @@ export default function HorizontalScrollGallery({
     const handleWheel = (e) => {
       // Check if there's horizontal scroll space
       const hasHorizontalScroll = el.scrollWidth > el.clientWidth;
+      const isMobileDevice = window.innerWidth <= 768;
 
-      if (hasHorizontalScroll) {
-        // Prevent default vertical scroll
+      if (hasHorizontalScroll && !isMobileDevice) {
+        // Desktop only: Prevent default vertical scroll
         e.preventDefault();
         e.stopPropagation();
 
-        // Slower, more controlled scroll speed (reduced from 1.0 to 0.6)
+        // Slower, more controlled scroll speed
         const scrollSpeed = 0.6;
         const scrollAmount = e.deltaY * scrollSpeed;
 
@@ -188,6 +206,7 @@ export default function HorizontalScrollGallery({
         if (rafId.current) cancelAnimationFrame(rafId.current);
         rafId.current = requestAnimationFrame(smoothScroll);
       }
+      // Mobile: Don't interfere with native touch scrolling
     };
 
     el.addEventListener("wheel", handleWheel, { passive: false });

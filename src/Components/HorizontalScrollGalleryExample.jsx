@@ -217,8 +217,10 @@ function ProjectGalleryWrapper({
         // Prevent default vertical scroll
         e.preventDefault();
         e.stopPropagation();
-        // Convert vertical scroll to horizontal
-        container.scrollLeft += e.deltaY;
+
+        // Slower, more controlled scroll speed
+        const scrollSpeed = 0.6;
+        container.scrollLeft += e.deltaY * scrollSpeed;
       }
     };
 

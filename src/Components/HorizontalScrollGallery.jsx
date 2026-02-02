@@ -54,14 +54,15 @@ export default function HorizontalScrollGallery({
     const el = scrollRef.current;
     if (!el) return;
 
-    // Faster lerp for snappier response
-    const ease = 0.12;
+    // Use faster easing during drag for responsiveness, slower when not dragging
+    const ease = dragging.current.down ? 0.18 : 0.08;
     const diff = targetScroll.current - currentScroll.current;
 
     // Only update if there's a significant difference
-    if (Math.abs(diff) < 0.5) {
+    if (Math.abs(diff) < 0.3) {
       currentScroll.current = targetScroll.current;
       el.scrollLeft = targetScroll.current;
+      rafId.current = null;
       return;
     }
 
@@ -75,9 +76,6 @@ export default function HorizontalScrollGallery({
   const onPointerDown = (e) => {
     const el = scrollRef.current;
     if (!el) return;
-
-    // Stop any ongoing smooth scroll
-    if (rafId.current) cancelAnimationFrame(rafId.current);
 
     dragging.current = {
       down: true,
@@ -103,7 +101,17 @@ export default function HorizontalScrollGallery({
 
     const dx = e.clientX - dragging.current.startX;
     const newScrollLeft = dragging.current.scrollLeft - dx;
-    el.scrollLeft = newScrollLeft;
+
+    // Use smooth animation for drag instead of direct scrollLeft
+    targetScroll.current = Math.max(
+      0,
+      Math.min(el.scrollWidth - el.clientWidth, newScrollLeft)
+    );
+
+    // Start smooth animation if not already running
+    if (!rafId.current) {
+      rafId.current = requestAnimationFrame(smoothScroll);
+    }
 
     // Calculate velocity for momentum
     const now = Date.now();
@@ -113,10 +121,6 @@ export default function HorizontalScrollGallery({
     }
     lastX.current = e.clientX;
     lastTime.current = now;
-
-    // Sync scroll refs
-    currentScroll.current = newScrollLeft;
-    targetScroll.current = newScrollLeft;
   };
 
   const onPointerUp = (e) => {
@@ -126,9 +130,9 @@ export default function HorizontalScrollGallery({
     dragging.current.down = false;
     el.releasePointerCapture?.(e.pointerId);
 
-    // Apply momentum scrolling
+    // Apply momentum scrolling with gentler, more refined feel
     if (Math.abs(velocity.current) > 0.1) {
-      const momentum = velocity.current * 300; // Momentum multiplier
+      const momentum = velocity.current * 200; // Reduced momentum multiplier for smoother feel
       const maxScroll = el.scrollWidth - el.clientWidth;
       targetScroll.current = Math.max(
         0,
@@ -166,12 +170,23 @@ export default function HorizontalScrollGallery({
         // Prevent default vertical scroll
         e.preventDefault();
         e.stopPropagation();
-        // Convert vertical scroll to horizontal
-        el.scrollLeft += e.deltaY;
 
-        // Update scroll refs
-        currentScroll.current = el.scrollLeft;
-        targetScroll.current = el.scrollLeft;
+        // Slower, more controlled scroll speed (reduced from 1.0 to 0.6)
+        const scrollSpeed = 0.6;
+        const scrollAmount = e.deltaY * scrollSpeed;
+
+        // Use smooth momentum scrolling
+        targetScroll.current = Math.max(
+          0,
+          Math.min(
+            el.scrollWidth - el.clientWidth,
+            targetScroll.current + scrollAmount
+          )
+        );
+
+        // Start smooth scroll animation
+        if (rafId.current) cancelAnimationFrame(rafId.current);
+        rafId.current = requestAnimationFrame(smoothScroll);
       }
     };
 
@@ -180,7 +195,7 @@ export default function HorizontalScrollGallery({
     return () => {
       el.removeEventListener("wheel", handleWheel);
     };
-  }, []);
+  }, [smoothScroll]);
 
   // Initialize with full opacity - no fade animations
   useEffect(() => {
@@ -224,6 +239,7 @@ export default function HorizontalScrollGallery({
         className={`hide-scrollbar h-full w-full overflow-y-hidden ${
           isActive ? "overflow-x-auto cursor-grab active:cursor-grabbing" : "overflow-x-hidden"
         }`}
+        style={{ scrollBehavior: "auto" }}
         onPointerDown={onPointerDown}
         onPointerMove={onPointerMove}
         onPointerUp={onPointerUp}

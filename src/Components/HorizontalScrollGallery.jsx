@@ -1,362 +1,363 @@
 // src/Components/HorizontalScrollGallery.jsx
-import React, { useRef, useEffect, useState } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, {
+  useRef,
+  useEffect,
+  useState,
+  useCallback,
+  useMemo,
+} from "react";
+import { motion } from "framer-motion";
+// Lazy load images with Intersection Observer
+const LazyImage = React.memo(
+  ({ src, alt, loading, fetchPriority, className }) => {
+    const [imageSrc, setImageSrc] = useState(null);
+    const imgRef = useRef(null);
 
-gsap.registerPlugin(ScrollTrigger);
+    useEffect(() => {
+      if (loading === "eager") {
+        setImageSrc(src);
+        return;
+      }
+
+      const observer = new IntersectionObserver(
+        (entries) => {
+          if (entries[0].isIntersecting) {
+            setImageSrc(src);
+            observer.disconnect();
+          }
+        },
+        { rootMargin: "50px" },
+      );
+
+      if (imgRef.current) observer.observe(imgRef.current);
+      return () => observer.disconnect();
+    }, [src, loading]);
+
+    return (
+      <img
+        ref={imgRef}
+        src={imageSrc}
+        alt={alt}
+        className={className}
+        loading={loading}
+        fetchPriority={fetchPriority}
+      />
+    );
+  },
+);
 
 /**
- * HorizontalScrollGallery - A reusable component for displaying images and text sections
- * in a horizontally scrollable container with drag support.
- *
- * @param {Object} props
- * @param {Array} props.items - Array of items to display. Each item should have:
- *   - type: 'image' or 'text'
- *   - src: image URL (for image type)
- *   - alt: alt text (for image type)
- *   - title: heading text (for text type)
- *   - content: paragraph text (for text type)
- * @param {string} props.height - Height of the gallery (default: 'h-[80vh]')
- * @param {boolean} props.showCounter - Show slide counter (default: false)
- * @param {string} props.className - Additional CSS classes
- *
- * @example
- * const items = [
- *   { type: 'image', src: '/path/to/image1.jpg', alt: 'Image 1' },
- *   { type: 'text', title: 'About This Project', content: 'Lorem ipsum...' },
- *   { type: 'image', src: '/path/to/image2.jpg', alt: 'Image 2' },
- * ];
- * <HorizontalScrollGallery items={items} height="h-[70vh]" showCounter={true} />
+ * HorizontalScrollGallery - Optimized for smooth scroll with Framer Motion
  */
-export default function HorizontalScrollGallery({
-  items = [],
-  height="h-[60vh] sm:h-[70vh] md:h-[80vh]",
-  className = "",
-  intro = null,
-  isActive = false,
-  isMobile = false,
-}) {
-  const scrollRef = useRef(null);
-  const containerRef = useRef(null);
-  const dragging = useRef({ down: false, startX: 0, scrollLeft: 0 });
-  const targetScroll = useRef(0);
-  const currentScroll = useRef(0);
-  const rafId = useRef(null);
-  const [_isLoaded, setIsLoaded] = useState(false);
+const HorizontalScrollGallery = React.memo(
+  ({
+    items = [],
+    height = "h-[60vh] sm:h-[70vh] md:h-[80vh]",
+    className = "",
+    intro = null,
+    isActive = false,
+  }) => {
+    const scrollRef = useRef(null);
+    const containerRef = useRef(null);
+    const dragging = useRef({ down: false, startX: 0, scrollLeft: 0 });
+    const targetScroll = useRef(0);
+    const currentScroll = useRef(0);
+    const rafId = useRef(null);
+    const [_isLoaded, setIsLoaded] = useState(false);
 
-  // Drag-to-scroll functionality with smooth momentum
-  const velocity = useRef(0);
-  const lastX = useRef(0);
-  const lastTime = useRef(0);
+    // Memoize gallery items
+    const galleryItems = useMemo(
+      () => (intro ? [intro, ...items] : items),
+      [intro, items],
+    );
 
-  // Optimized smooth scroll animation loop
-  const smoothScroll = React.useCallback(() => {
-    const el = scrollRef.current;
-    if (!el) return;
+    // Velocity tracking for smooth momentum
+    const velocity = useRef(0);
+    const lastX = useRef(0);
+    const lastTime = useRef(0);
 
-    // Use faster easing during drag for responsiveness, slower when not dragging
-    const ease = dragging.current.down ? 0.18 : 0.08;
-    const diff = targetScroll.current - currentScroll.current;
+    // Ultra-smooth scroll animation with GPU acceleration
+    const smoothScroll = useCallback(() => {
+      const el = scrollRef.current;
+      if (!el) return;
 
-    // Only update if there's a significant difference
-    if (Math.abs(diff) < 0.3) {
-      currentScroll.current = targetScroll.current;
-      el.scrollLeft = targetScroll.current;
-      rafId.current = null;
-      return;
-    }
+      const ease = dragging.current.down ? 0.18 : 0.08; // Faster easing for responsiveness
+      const diff = targetScroll.current - currentScroll.current;
 
-    currentScroll.current += diff * ease;
-    el.scrollLeft = currentScroll.current;
+      if (Math.abs(diff) < 1) {
+        currentScroll.current = targetScroll.current;
+        el.scrollLeft = Math.round(targetScroll.current);
+        rafId.current = null;
+        // Remove will-change when scroll completes
+        if (el.style.willChange) el.style.willChange = "";
+        return;
+      }
 
-    // Continue animation
-    rafId.current = requestAnimationFrame(smoothScroll);
-  }, []);
+      // Add GPU acceleration during scroll
+      if (!el.style.willChange) el.style.willChange = "scroll-position";
 
-  const onPointerDown = (e) => {
-    const el = scrollRef.current;
-    if (!el) return;
+      currentScroll.current += diff * ease;
+      el.scrollLeft = Math.round(currentScroll.current);
 
-    dragging.current = {
-      down: true,
-      startX: e.clientX,
-      scrollLeft: el.scrollLeft,
-    };
+      rafId.current = requestAnimationFrame(smoothScroll);
+    }, []);
 
-    // Sync target scroll with current position
-    currentScroll.current = el.scrollLeft;
-    targetScroll.current = el.scrollLeft;
+    const onPointerDown = useCallback((e) => {
+      const el = scrollRef.current;
+      if (!el) return;
 
-    lastX.current = e.clientX;
-    lastTime.current = Date.now();
-    velocity.current = 0;
+      dragging.current = {
+        down: true,
+        startX: e.clientX,
+        scrollLeft: el.scrollLeft,
+      };
 
-    el.setPointerCapture?.(e.pointerId);
-    e.stopPropagation();
-  };
-
-  const onPointerMove = (e) => {
-    const el = scrollRef.current;
-    if (!el || !dragging.current.down) return;
-
-    const dx = e.clientX - dragging.current.startX;
-    const newScrollLeft = dragging.current.scrollLeft - dx;
-
-    // Mobile: Direct 1:1 scroll (no animation, no jitter)
-    // Desktop: Smooth animation
-    const isMobileDevice = window.innerWidth <= 768;
-
-    if (isMobileDevice) {
-      // Simple, direct scroll - exactly what the user drags
-      el.scrollLeft = Math.max(
-        0,
-        Math.min(el.scrollWidth - el.clientWidth, newScrollLeft)
-      );
       currentScroll.current = el.scrollLeft;
       targetScroll.current = el.scrollLeft;
-    } else {
-      // Desktop: Use smooth animation
-      targetScroll.current = Math.max(
-        0,
-        Math.min(el.scrollWidth - el.clientWidth, newScrollLeft)
-      );
 
-      // Start smooth animation if not already running
-      if (!rafId.current) {
-        rafId.current = requestAnimationFrame(smoothScroll);
-      }
-    }
+      lastX.current = e.clientX;
+      lastTime.current = Date.now();
+      velocity.current = 0;
 
-    // Calculate velocity for momentum
-    const now = Date.now();
-    const dt = now - lastTime.current;
-    if (dt > 0) {
-      velocity.current = (lastX.current - e.clientX) / dt;
-    }
-    lastX.current = e.clientX;
-    lastTime.current = now;
-  };
+      el.setPointerCapture?.(e.pointerId);
+      e.stopPropagation();
+    }, []);
 
-  const onPointerUp = (e) => {
-    const el = scrollRef.current;
-    if (!el) return;
+    const onPointerMove = useCallback(
+      (e) => {
+        const el = scrollRef.current;
+        if (!el || !dragging.current.down) return;
 
-    dragging.current.down = false;
-    el.releasePointerCapture?.(e.pointerId);
+        const dx = e.clientX - dragging.current.startX;
+        const newScrollLeft = dragging.current.scrollLeft - dx;
+        const isMobileDevice = window.innerWidth <= 768;
 
-    const isMobileDevice = window.innerWidth <= 768;
+        if (isMobileDevice) {
+          el.scrollLeft = Math.max(
+            0,
+            Math.min(el.scrollWidth - el.clientWidth, newScrollLeft),
+          );
+          currentScroll.current = el.scrollLeft;
+          targetScroll.current = el.scrollLeft;
+        } else {
+          targetScroll.current = Math.max(
+            0,
+            Math.min(el.scrollWidth - el.clientWidth, newScrollLeft),
+          );
 
-    // Apply momentum scrolling only on desktop
-    if (!isMobileDevice && Math.abs(velocity.current) > 0.1) {
-      const momentum = velocity.current * 200;
-      const maxScroll = el.scrollWidth - el.clientWidth;
-      targetScroll.current = Math.max(
-        0,
-        Math.min(maxScroll, currentScroll.current + momentum)
-      );
+          if (!rafId.current) {
+            rafId.current = requestAnimationFrame(smoothScroll);
+          }
+        }
 
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-      rafId.current = requestAnimationFrame(smoothScroll);
-    }
-    // Mobile: No momentum, just stop where the user stops dragging
-  };
+        const now = Date.now();
+        const dt = now - lastTime.current;
+        if (dt > 0) {
+          velocity.current = (lastX.current - e.clientX) / dt;
+        }
+        lastX.current = e.clientX;
+        lastTime.current = now;
+      },
+      [smoothScroll],
+    );
 
-  // Initialize scroll values only
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
+    const onPointerUp = useCallback(
+      (e) => {
+        const el = scrollRef.current;
+        if (!el) return;
 
-    currentScroll.current = el.scrollLeft;
-    targetScroll.current = el.scrollLeft;
+        dragging.current.down = false;
+        el.releasePointerCapture?.(e.pointerId);
 
-    return () => {
-      if (rafId.current) cancelAnimationFrame(rafId.current);
-    };
-  }, []);
+        const isMobileDevice = window.innerWidth <= 768;
 
-  // Enable horizontal scroll with mouse wheel (desktop only)
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
+        if (!isMobileDevice && Math.abs(velocity.current) > 0.1) {
+          const momentum = velocity.current * 180; // Slightly reduced for smoothness
+          const maxScroll = el.scrollWidth - el.clientWidth;
+          targetScroll.current = Math.max(
+            0,
+            Math.min(maxScroll, currentScroll.current + momentum),
+          );
 
-    const handleWheel = (e) => {
-      // Check if there's horizontal scroll space
-      const hasHorizontalScroll = el.scrollWidth > el.clientWidth;
-      const isMobileDevice = window.innerWidth <= 768;
+          if (rafId.current) cancelAnimationFrame(rafId.current);
+          rafId.current = requestAnimationFrame(smoothScroll);
+        }
+      },
+      [smoothScroll],
+    );
 
-      if (hasHorizontalScroll && !isMobileDevice) {
-        // Desktop only: Prevent default vertical scroll
-        e.preventDefault();
-        e.stopPropagation();
+    // Initialize scroll
+    useEffect(() => {
+      const el = scrollRef.current;
+      if (!el) return;
 
-        // Slower, more controlled scroll speed
-        const scrollSpeed = 0.6;
-        const scrollAmount = e.deltaY * scrollSpeed;
+      currentScroll.current = el.scrollLeft;
+      targetScroll.current = el.scrollLeft;
 
-        // Use smooth momentum scrolling
-        targetScroll.current = Math.max(
-          0,
-          Math.min(
-            el.scrollWidth - el.clientWidth,
-            targetScroll.current + scrollAmount
-          )
-        );
-
-        // Start smooth scroll animation
+      return () => {
         if (rafId.current) cancelAnimationFrame(rafId.current);
-        rafId.current = requestAnimationFrame(smoothScroll);
-      }
-      // Mobile: Don't interfere with native touch scrolling
-    };
+      };
+    }, []);
 
-    el.addEventListener("wheel", handleWheel, { passive: false });
+    // Wheel scroll with smooth easing
+    useEffect(() => {
+      const el = scrollRef.current;
+      if (!el) return;
 
-    return () => {
-      el.removeEventListener("wheel", handleWheel);
-    };
-  }, [smoothScroll]);
+      const handleWheel = (e) => {
+        const hasHorizontalScroll = el.scrollWidth > el.clientWidth;
+        const isMobileDevice = window.innerWidth <= 768;
 
-  // Initialize with full opacity - no fade animations
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+        if (hasHorizontalScroll && !isMobileDevice) {
+          e.preventDefault();
+          e.stopPropagation();
 
-    // Set full opacity immediately
-    gsap.set(el, { opacity: 1 });
+          const scrollSpeed = 0.5; // Smooth scroll speed
+          const scrollAmount = e.deltaY * scrollSpeed;
 
-    const items = el.querySelectorAll(".gallery-item");
-    gsap.set(items, { opacity: 1, scale: 1 });
+          targetScroll.current = Math.max(
+            0,
+            Math.min(
+              el.scrollWidth - el.clientWidth,
+              targetScroll.current + scrollAmount,
+            ),
+          );
 
-    setIsLoaded(true);
-  }, []);
+          if (rafId.current) cancelAnimationFrame(rafId.current);
+          rafId.current = requestAnimationFrame(smoothScroll);
+        }
+      };
 
-  // Add smooth scroll-based scaling animation - DISABLED
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
+      el.addEventListener("wheel", handleWheel, { passive: false });
+      return () => {
+        el.removeEventListener("wheel", handleWheel);
+      };
+    }, [smoothScroll]);
 
-    const items = el.querySelectorAll(".gallery-item");
-    if (!items.length) return;
+    // Initialize
+    useEffect(() => {
+      setIsLoaded(true);
+    }, []);
 
-    // Set all items to scale 1 (no scaling effect)
-    gsap.set(items, { scale: 1 });
-
-    // No scroll handler needed - scaling effect removed
-  }, []);
-
-  // If intro is provided, add it as the first item
-  const galleryItems = intro ? [intro, ...items] : items;
-
-  return (
-    <div
-      ref={containerRef}
-      className={`relative ${height} w-full overflow-hidden ${className}`}
-    >
-      {/* Horizontally scrollable container */}
+    return (
       <div
-        ref={scrollRef}
-        className={`hide-scrollbar h-full w-full overflow-y-hidden ${
-          isActive ? "overflow-x-auto cursor-grab active:cursor-grabbing" : "overflow-x-hidden"
-        }`}
-        style={{ scrollBehavior: "auto" }}
-        onPointerDown={onPointerDown}
-        onPointerMove={onPointerMove}
-        onPointerUp={onPointerUp}
-        onPointerCancel={onPointerUp}
+        ref={containerRef}
+        className={`relative ${height} w-full overflow-hidden ${className}`}
       >
-        <div
-          className={`flex h-full items-stretch ${
-            isActive ? "gap-2" : "gap-0"
+        <motion.div
+          ref={scrollRef}
+          className={`hide-scrollbar h-full w-full overflow-y-hidden ${
+            isActive
+              ? "overflow-x-auto cursor-grab active:cursor-grabbing"
+              : "overflow-x-hidden"
           }`}
-          style={{ width: "auto" }}
+          style={{ scrollBehavior: "auto" }}
+          onPointerDown={onPointerDown}
+          onPointerMove={onPointerMove}
+          onPointerUp={onPointerUp}
+          onPointerCancel={onPointerUp}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.4, ease: "easeOut" }}
         >
-          {galleryItems.map((item, index) => (
-            <div
-              key={index}
-              className="gallery-item flex-none h-full m-0 p-0"
-              style={{ width: `auto` }}
-            >
-              {item.type === "intro" ? (
-                <div className="flex h-full w-[85vw] sm:w-[350px] md:w-[400px] lg:w-full flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6 bg-white text-neutral-800 text-[0.95rem]">
-                  {/* Logo */}
-                  {item.logo && (
-                    <img
-                      src={item.logo}
-                      alt="Logo"
-                      className="w-20 h-20 mt-2 object-contain flex-shrink-0"
-                    />
-                  )}
+          <div
+            className={`flex h-full items-stretch ${
+              isActive ? "gap-2" : "gap-0"
+            }`}
+            style={{ width: "auto" }}
+          >
+            {galleryItems.map((item, index) => (
+              <motion.div
+                key={index}
+                className="gallery-item flex-none h-full m-0 p-0"
+                style={{ width: "auto" }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: index * 0.05, duration: 0.3 }}
+              >
+                {item.type === "intro" ? (
+                  <div className="flex h-full w-[85vw] sm:w-[350px] md:w-[400px] lg:w-full flex-col items-center justify-between py-8 sm:py-12 px-4 sm:px-6 bg-white text-neutral-800 text-[0.95rem]">
+                    {item.logo && (
+                      <motion.img
+                        src={item.logo}
+                        alt="Logo"
+                        className="w-20 h-20 mt-2 object-contain flex-shrink-0"
+                        initial={{ scale: 0.8 }}
+                        animate={{ scale: 1 }}
+                        transition={{ duration: 0.4 }}
+                      />
+                    )}
 
-                  {/* Title, location, year */}
-                  <div className="flex flex-col items-end gap-6 w-full">
-                    <h1 className="text-[1.3rem] font-normal text-end tracking-tight leading-tight max-w-[300px]">
-                      {item.title}
-                    </h1>
-                    <div className="text-base text-gray-400 text-end tracking-wide uppercase leading-tight">
-                      {item.location}
-                    </div>
-                    <div className="text-base text-gray-400 text-end tracking-wide leading-tight">
-                      {item.year}
-                    </div>
-                  </div>
-
-                  {/* Details */}
-                  <div className="flex flex-col items-end gap-8 w-full pr-2">
-                    <div className="flex flex-col items-end gap-2">
-                      <div className="text-gray-400 text-xs uppercase tracking-wide">
-                        TYPOLOGY
-                      </div>
-                      <div className="text-sm font-normal text-right">
-                        {item.typology}
-                      </div>
-                    </div>
-                    <div className="flex flex-col items-end gap-2">
-                      <div className="text-gray-400 text-xs uppercase tracking-wide">
-                        STATUS
-                      </div>
-                      <div className="text-sm font-normal text-right">
-                        {item.status}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Spacer for bottom alignment */}
-                  <div className="flex-shrink-0" />
-                </div>
-              ) : item.type === "image" ? (
-                // Image section
-                <figure className="relative h-full w-[90vw] sm:w-[75vw] md:w-auto overflow-hidden">
-                  <img
-                    src={item.src}
-                    alt={item.alt || `Image ${index + 1}`}
-                    className="h-full w-full sm:w-auto object-cover"
-                    loading={index === 0 ? "eager" : "lazy"}
-                    fetchPriority={index === 0 ? "high" : undefined}
-                  />
-                </figure>
-              ) : item.type === "text" ? (
-                // Text section
-                <div className="flex h-full w-full items-center justify-center bg-white text-neutral-800">
-                  <div className="w-full h-full flex flex-col items-center justify-center px-4">
-                    {item.title && (
-                      <h3 className="text-xl font-light tracking-tight text-center mb-2">
+                    <div className="flex flex-col items-end gap-4 w-full">
+                      <h1 className="text-lg md:text-[1.3rem] font-normal text-end tracking-tight leading-tight max-w-[220px] md:max-w-[300px]">
                         {item.title}
-                      </h3>
-                    )}
-                    {item.content && (
-                      <div className="text-xs font-light leading-relaxed text-center">
-                        {item.content.split("\n\n").map((paragraph, i) => (
-                          <p key={i}>{paragraph}</p>
-                        ))}
+                      </h1>
+                      <div className="text-sm md:text-base text-gray-400 text-end tracking-wide uppercase leading-tight">
+                        {item.location}
                       </div>
-                    )}
+                      <div className="text-sm md:text-base text-gray-400 text-end tracking-wide leading-tight">
+                        {item.year}
+                      </div>
+                    </div>
+
+                    <div className="flex flex-col items-end gap-8 w-full pr-2">
+                      <div className="flex flex-col items-end gap-2">
+                        <div className="text-gray-400 text-[10px] md:text-xs uppercase tracking-wide">
+                          TYPOLOGY
+                        </div>
+                        <div className="text-xs md:text-sm font-normal text-right">
+                          {item.typology}
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end gap-2">
+                        <div className="text-gray-400 text-[10px] md:text-xs uppercase tracking-wide">
+                          STATUS
+                        </div>
+                        <div className="text-xs md:text-sm font-normal text-right">
+                          {item.status}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="flex-shrink-0" />
                   </div>
-                </div>
-              ) : null}
-            </div>
-          ))}
-        </div>
+                ) : item.type === "image" ? (
+                  <figure className="relative h-full w-[90vw] sm:w-[75vw] md:w-auto overflow-hidden">
+                    <LazyImage
+                      src={item.src}
+                      alt={item.alt || `Image ${index + 1}`}
+                      className="h-full w-full sm:w-auto object-cover"
+                      loading={index === 0 ? "eager" : "lazy"}
+                      fetchPriority={index === 0 ? "high" : undefined}
+                    />
+                  </figure>
+                ) : item.type === "text" ? (
+                  <div className="flex h-full w-full items-center justify-center bg-white text-neutral-800">
+                    <div className="w-full h-full flex flex-col items-center justify-center px-4">
+                      {item.title && (
+                        <h3 className="text-lg md:text-xl font-light tracking-tight text-center mb-2">
+                          {item.title}
+                        </h3>
+                      )}
+                      {item.content && (
+                        <div className="text-xs md:text-sm font-light leading-relaxed text-center">
+                          {item.content.split("\n\n").map((paragraph, i) => (
+                            <p key={i}>{paragraph}</p>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                ) : null}
+              </motion.div>
+            ))}
+          </div>
+        </motion.div>
       </div>
-    </div>
-  );
-}
+    );
+  },
+);
+
+HorizontalScrollGallery.displayName = "HorizontalScrollGallery";
+
+export default HorizontalScrollGallery;

@@ -1,8 +1,8 @@
-import { useEffect, useRef } from "react";
-import { gsap } from "gsap";
+import React, { useEffect, useRef } from "react";
+import {motion} from "framer-motion";
 import loadingVideo from "../assets/final-pb-animation.mp4";
 
-export default function Landing({ onComplete }) {
+const Landing = React.memo(({ onComplete }) => {
   const containerRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -11,18 +11,17 @@ export default function Landing({ onComplete }) {
 
     // When video ends, fade out and complete
     const handleVideoEnd = () => {
-      gsap.to(containerRef.current, {
-        opacity: 0,
-        duration: 0.6,
-        ease: "power2.inOut",
-        onComplete: onComplete,
-      });
+      if (containerRef.current) {
+        containerRef.current.style.opacity = "0";
+        containerRef.current.style.transition =
+          "opacity 0.6s cubic-bezier(0.4, 0.0, 0.2, 1)";
+        setTimeout(onComplete, 600);
+      }
     };
 
     if (video) {
       video.addEventListener("ended", handleVideoEnd);
-      video.play().catch((err) => {
-        console.log("Video autoplay failed:", err);
+      video.play().catch(() => {
         // If autoplay fails, still proceed after a delay
         setTimeout(handleVideoEnd, 2000);
       });
@@ -36,9 +35,11 @@ export default function Landing({ onComplete }) {
   }, [onComplete]);
 
   return (
-    <div
+    <motion.div
       ref={containerRef}
       className="fixed inset-0 z-[100] bg-white flex items-center justify-center"
+      initial={{ opacity: 1 }}
+      animate={{ opacity: 1 }}
     >
       <video
         ref={videoRef}
@@ -48,6 +49,9 @@ export default function Landing({ onComplete }) {
         playsInline
         preload="auto"
       />
-    </div>
+    </motion.div>
   );
-}
+});
+
+Landing.displayName = "Landing";
+export default Landing;

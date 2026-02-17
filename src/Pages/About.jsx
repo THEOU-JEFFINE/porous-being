@@ -1,194 +1,211 @@
-import React, { useRef, useEffect } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React, { useRef, useEffect, useMemo } from "react";
+import { Helmet } from "react-helmet-async";
+import { motion } from "framer-motion";
 import pblImage from "../assets/pbl.jpeg";
 import offImage from "../assets/Office_pic.jpg";
-gsap.registerPlugin(ScrollTrigger);
 
-export default function About() {
+const About = React.memo(() => {
   const titleRef = useRef(null);
   const leftColumnRef = useRef(null);
   const mainImageRef = useRef(null);
-  const scopeTitleRef = useRef(null);
-  const scopeLeftRef = useRef(null);
-  const galleryItemsRef = useRef([]);
 
   // Scroll to top on component mount
   useEffect(() => {
-    window.scrollTo(0, 0);
+    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
 
-  useEffect(() => {
-    const ctx = gsap.context(() => {
-      // Title animation
-      gsap.from(titleRef.current, {
-        y: 80,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power4.out",
-      });
+  // Memoize SEO structured data
+  const aboutStructuredData = useMemo(
+    () => ({
+      "@context": "https://schema.org",
+      "@type": "AboutPage",
+      name: "About — Porous Being",
+      description:
+        "Learn about Porous Being, an architecture and design practice exploring the intersection of spatial design, ecology, and urbanism.",
+      url:
+        typeof window !== "undefined" ? window.location.origin + "/about" : "",
+    }),
+    [],
+  );
 
-      // Content paragraphs stagger
-      gsap.from(leftColumnRef.current.children, {
-        y: 40,
-        opacity: 0,
-        duration: 1,
-        stagger: 0.15,
-        ease: "power3.out",
-        delay: 0.3,
-      });
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: { staggerChildren: 0.1, delayChildren: 0.3 },
+    },
+  };
 
-      // Main image reveal
-      gsap.from(mainImageRef.current, {
-        scale: 0.8,
-        opacity: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: mainImageRef.current,
-          start: "top bottom-=100",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      // Scope section title
-      gsap.from(scopeTitleRef.current, {
-        y: 50,
-        opacity: 0,
-        duration: 1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: scopeTitleRef.current,
-          start: "top bottom-=100",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      // Scope columns
-      gsap.from(scopeLeftRef.current.children, {
-        y: 30,
-        opacity: 0,
-        duration: 0.8,
-        stagger: 0.1,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: scopeLeftRef.current,
-          start: "top bottom-=100",
-          toggleActions: "play none none reverse",
-        },
-      });
-
-      // Gallery items stagger animation
-      galleryItemsRef.current.forEach((item) => {
-        if (item) {
-          gsap.from(item, {
-            y: 60,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power2.out",
-            scrollTrigger: {
-              trigger: item,
-              start: "top bottom-=50",
-              toggleActions: "play none none reverse",
-            },
-          });
-        }
-      });
-    });
-
-    return () => ctx.revert();
-  }, []);
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.5 } },
+  };
 
   return (
-    <div className="min-h-screen px-4 md:px-8 lg:px-16 xl:px-24">
-      {/* Main Content */}
-      <div className="max-w-5xl mx-auto">
-        <h1
-          ref={titleRef}
-          className="mt-12 text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 lg:mb-12 xl:mb-16"
-        >
-          PHILOSOPHY
-        </h1>
+    <>
+      <Helmet>
+        <title>About — Porous Being | Architecture & Design Practice</title>
+        <meta
+          name="title"
+          content="About — Porous Being | Architecture & Design Practice"
+        />
+        <meta
+          name="description"
+          content="Learn about Porous Being, an architecture and design practice exploring the intersection of spatial design, ecology, and urbanism."
+        />
+        <meta
+          name="keywords"
+          content="architecture firm, design studio, sustainability, urban design, ecology"
+        />
+        <link rel="canonical" href="/about" />
+        <meta property="og:type" content="website" />
+        <meta property="og:title" content="About — Porous Being" />
+        <meta
+          property="og:description"
+          content="Learn about our architecture and design practice."
+        />
+        <meta property="og:url" content="/about" />
+        <script type="application/ld+json">
+          {JSON.stringify(aboutStructuredData)}
+        </script>
+      </Helmet>
 
-        <div>
-          {/* Philosophy Content */}
-          <div ref={leftColumnRef} className="space-y-6 lg:space-y-8">
-            <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-              At Porous Being, we translate the philosophy of porosity into
-              built environments that live, breathe, and evolve. It is our
-              commitment to create spaces that are open, responsive and
-              generative.
-            </p>
+      <div className="min-h-screen px-4 md:px-8 lg:px-16 xl:px-24">
+        {/* Main Content */}
+        <div className="max-w-5xl mx-auto">
+          <motion.h1
+            ref={titleRef}
+            initial={{ y: 80, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 1, ease: "easeOut" }}
+            className="mt-12 text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 lg:mb-12 xl:mb-16"
+          >
+            PHILOSOPHY
+          </motion.h1>
 
-            <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-light">
-              To design porously is to resist excess and allow space for nature
-              to settle - to shape not just enclosures, but invitations to
-              engage with your surroundings, in all their living, non-living,
-              and silent forms. It is a refusal to see architecture as a
-              finished product, but rather as an emerging ecosystem.
-            </p>
-
-            <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-              Porous Being is a process of resistance to isolation, over
-              definition and sealed systems.
-            </p>
-          </div>
-
-          {/* Image section */}
-          <div className="mt-10 sm:mt-16 lg:mt-20">
-            <img
-              ref={mainImageRef}
-              src={pblImage}
-              alt="Architecture"
-              className="w-full h-48 sm:h-64 lg:h-96 rounded-lg object-cover"
-            />
-          </div>
-
-          {/* Scope of Work Section */}
-          <div className="mt-12 lg:mt-16">
-            <h2
-              ref={scopeTitleRef}
-              className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mb-6 lg:mb-8"
+          <div>
+            {/* Philosophy Content */}
+            <motion.div
+              ref={leftColumnRef}
+              variants={containerVariants}
+              initial="hidden"
+              animate="visible"
+              className="space-y-6 lg:space-y-8"
             >
-              SCOPE OF WORK
-            </h2>
+              <motion.p
+                variants={itemVariants}
+                className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans"
+              >
+                At Porous Being, we translate the philosophy of porosity into
+                built environments that live, breathe, and evolve. It is our
+                commitment to create spaces that are open, responsive and
+                generative.
+              </motion.p>
 
-            <div ref={scopeLeftRef} className="space-y-6 lg:space-y-8">
-              <p className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans">
-                In POROUSBEING, we offer comprehensive consultancy services
-                across multiple disciplines of design and planning. Our
-                integrated approach ensures seamless coordination between
-                architecture, landscape, and urban strategy.
-              </p>
-              <ul className="space-y-3 text-sm sm:text-base lg:text-lg text-gray-700">
-                <li className="flex items-start">
-                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Architecture Design Consultancy Services
-                </li>
-                <li className="flex items-start">
-                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Urban Design and Strategy Consultancy Service
-                </li>
-                <li className="flex items-start">
-                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Interior Architecture Consultancy Service
-                </li>
-                <li className="flex items-start">
-                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Landscape Architecture Consultancy Service
-                </li>
-                <li className="flex items-start">
-                  <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
-                  Hydro Spatial Strategy and Planning
-                </li>
-              </ul>
-              <br></br>
-              <img src={offImage} alt="Office Picture"></img>
-              <br></br>
-            </div>
+              <motion.p
+                variants={itemVariants}
+                className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-light"
+              >
+                To design porously is to resist excess and allow space for
+                nature to settle - to shape not just enclosures, but invitations
+                to engage with your surroundings, in all their living,
+                non-living, and silent forms. It is a refusal to see
+                architecture as a finished product, but rather as an emerging
+                ecosystem.
+              </motion.p>
+
+              <motion.p
+                variants={itemVariants}
+                className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans"
+              >
+                Porous Being is a process of resistance to isolation, over
+                definition and sealed systems.
+              </motion.p>
+            </motion.div>
+
+            {/* Image section */}
+            <motion.div
+              className="mt-10 sm:mt-16 lg:mt-20"
+              initial={{ scale: 0.9, opacity: 0 }}
+              whileInView={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <img
+                ref={mainImageRef}
+                src={pblImage}
+                alt="Porous Being architectural philosophy and design principles"
+                className="w-full h-48 sm:h-64 lg:h-96 rounded-lg object-cover"
+                loading="lazy"
+              />
+            </motion.div>
+
+            {/* Scope of Work Section */}
+            <motion.div
+              className="mt-12 lg:mt-16"
+              initial={{ opacity: 0 }}
+              whileInView={{ opacity: 1 }}
+              transition={{ duration: 0.8 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl font-normal text-black mb-6 lg:mb-8">
+                SCOPE OF WORK
+              </h2>
+
+              <motion.div
+                variants={containerVariants}
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true }}
+                className="space-y-6 lg:space-y-8"
+              >
+                <motion.p
+                  variants={itemVariants}
+                  className="text-justify text-sm sm:text-base lg:text-lg text-gray-900 leading-relaxed font-sans"
+                >
+                  In POROUSBEING, we offer comprehensive consultancy services
+                  across multiple disciplines of design and planning. Our
+                  integrated approach ensures seamless coordination between
+                  architecture, landscape, and urban strategy.
+                </motion.p>
+
+                <motion.ul
+                  variants={containerVariants}
+                  className="space-y-3 text-sm sm:text-base lg:text-lg text-gray-700"
+                >
+                  {[
+                    "Architecture Design Consultancy Services",
+                    "Urban Design and Strategy Consultancy Service",
+                    "Interior Architecture Consultancy Service",
+                    "Landscape Architecture Consultancy Service",
+                    "Hydro Spatial Strategy and Planning",
+                  ].map((service, idx) => (
+                    <motion.li
+                      key={idx}
+                      variants={itemVariants}
+                      className="flex items-start"
+                    >
+                      <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      {service}
+                    </motion.li>
+                  ))}
+                </motion.ul>
+
+                <motion.img
+                  variants={itemVariants}
+                  src={offImage}
+                  alt="Porous Being office and design studio environment"
+                  className="w-full rounded-lg object-cover"
+                  loading="lazy"
+                />
+              </motion.div>
+            </motion.div>
           </div>
         </div>
       </div>
-    </div>
+    </>
   );
-}
+});
+
+About.displayName = "About";
+export default About;

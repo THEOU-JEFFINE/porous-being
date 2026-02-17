@@ -1,0 +1,32 @@
+# Porous Being - SEO Robots Configuration
+# Allow all search engines to crawl and index
+
+User-agent: *
+Allow: /
+Disallow: /admin
+Disallow: /private
+
+# Slow down aggressive crawlers
+User-agent: AhrefsBot
+Crawl-delay: 10
+
+User-agent: SemrushBot
+Crawl-delay: 10
+
+# Allow images, CSS, JavaScript
+Allow: *.css$
+Allow: *.js$
+Allow: *.jpg$
+Allow: *.jpeg$
+Allow: *.png$
+Allow: *.gif$
+Allow: *.webp$
+
+# Sitemap location
+Sitemap: https://porous-being.com/sitemap.xml
+
+# Crawl delay for all bots
+Crawl-delay: 1
+
+# Request interval
+Request-rate: 1/1s

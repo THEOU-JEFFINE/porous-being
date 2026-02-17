@@ -1,6 +1,6 @@
 // src/Components/HorizontalScrollGalleryExample.jsx
 import React from "react";
-import { gsap } from "gsap";
+
 import HorizontalScrollGallery from "./HorizontalScrollGallery";
 import componentData from "../assets/Data/componentData.js";
 
@@ -141,23 +141,31 @@ function ProjectGalleryWrapper({
   // }, [isMobile]);
 
   const projectImages = React.useMemo(() => {
-    const images = project.images || [];
-    console.log(`Project ${project.key}:`, {
-      hasImages: !!project.images,
-      imageCount: images.length,
-      firstImage: images[0],
-    });
+    let images = project.images || [];
+    // Normalize images: componentData may provide array of strings (urls) or objects
+    images = images
+      .map((img) => {
+        if (!img) return null;
+        if (typeof img === "string") return img;
+        if (typeof img === "object") return img.src || img;
+        return null;
+      })
+      .filter(Boolean);
+
+    if (!images || images.length === 0) {
+      // Use a small data-uri placeholder (1x1 transparent) to avoid layout shifts
+      images = [
+        "data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='1200' height='800'><rect width='100%' height='100%' fill='%23f3f3f3'/><text x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' fill='%23999' font-size='28'>No image available</text></svg>",
+      ];
+    }
+
     return images;
-  }, [project.images, project.key]);
+  }, [project.images]);
 
   const projectItems = React.useMemo(() => {
     try {
       return generateProjectItems(projectImages, project);
-    } catch (error) {
-      console.error(
-        `Error generating items for project ${project.key}:`,
-        error
-      );
+    } catch {
       return [];
     }
   }, [projectImages, project]);
@@ -265,8 +273,12 @@ function ProjectGalleryWrapper({
       <div className="w-[400px] h-[250px] bg-gray-200 flex items-center justify-center cursor-pointer rounded">
         <div className="text-center">
           <p className="text-gray-600 font-medium">{project.title}</p>
-          <p className="text-gray-400 text-xs sm:text-sm md:text-base
-">No images available</p>
+          <p
+            className="text-gray-400 text-xs sm:text-sm md:text-base
+"
+          >
+            No images available
+          </p>
         </div>
       </div>
     );
@@ -301,8 +313,10 @@ function ProjectGalleryWrapper({
           )}
 
           {/* Title */}
-          <h3 className="text-xs sm:text-sm md:text-base
-  font-medium text-gray-900 mb-1 leading-tight">
+          <h3
+            className="text-xs sm:text-sm md:text-base
+  font-medium text-gray-900 mb-1 leading-tight"
+          >
             {project.title}
           </h3>
 
@@ -315,7 +329,6 @@ function ProjectGalleryWrapper({
         {/* Center - Image */}
         {/* <div className="w-full md:w-[350px] lg:w-[400px] xl:w-[450px] overflow-hidden"> */}
         <div className="w-full h-[220px] sm:h-[260px] md:h-auto md:w-[350px] lg:w-[400px] xl:w-[450px] overflow-hidden">
-
           {firstImage ? (
             <img
               src={firstImage}
@@ -350,8 +363,10 @@ function ProjectGalleryWrapper({
               </span>
             </div>
           )}
-          <h3 className="text-xs sm:text-sm md:text-base
- font-medium text-gray-900 mb-1">
+          <h3
+            className="text-xs sm:text-sm md:text-base
+ font-medium text-gray-900 mb-1"
+          >
             {project.title}
           </h3>
           <p className="text-[10px] text-gray-400 uppercase tracking-wider">
@@ -363,54 +378,54 @@ function ProjectGalleryWrapper({
   }
 
   // When active: show expanded gallery
-if (isActive) {
-  return (
-    <div className="w-full flex flex-col items-center gap-4 py-8">
-      <div
-        ref={galleryRef}
-        className={`transition-all duration-500 ease-in-out rounded ${
-          isScrolled
-            ? "fixed inset-0 w-screen h-screen z-50 rounded-none"
-            : "w-screen h-[320px] sm:h-[380px] md:h-[450px] lg:h-[500px] relative z-40"
-        }`}
-      >
-        <HorizontalScrollGallery
-          items={isMobile ? finalItems : projectItems}
-          height="h-full"
-          intro={isMobile ? null : intro}
-          isActive={true}
-        />
-      </div>
-    </div>
-  );
-}
-// Mobile & Desktop inactive card
-if (!isActive) {
-  return (
-    <div
-      className="flex flex-col items-center justify-center py-6 cursor-pointer w-full"
-      onClick={onSetActive}
-    >
-      <div className="w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[400px] overflow-hidden">
-        {firstImage && (
-          <img
-            src={firstImage}
-            alt={project.title}
-            className="w-full h-auto object-cover rounded"
+  if (isActive) {
+    return (
+      <div className="w-full flex flex-col items-center gap-4 py-8">
+        <div
+          ref={galleryRef}
+          className={`transition-all duration-500 ease-in-out rounded ${
+            isScrolled
+              ? "fixed inset-0 w-screen h-screen z-50 rounded-none"
+              : "w-screen h-[320px] sm:h-[380px] md:h-[450px] lg:h-[500px] relative z-40"
+          }`}
+        >
+          <HorizontalScrollGallery
+            items={isMobile ? finalItems : projectItems}
+            height="h-full"
+            intro={isMobile ? null : intro}
+            isActive={true}
+            isMobile={isMobile}
           />
-        )}
+        </div>
       </div>
+    );
+  }
+  // Mobile & Desktop inactive card
+  if (!isActive) {
+    return (
+      <div
+        className="flex flex-col items-center justify-center py-6 cursor-pointer w-full"
+        onClick={onSetActive}
+      >
+        <div className="w-full max-w-[90vw] sm:max-w-[70vw] md:max-w-[400px] overflow-hidden">
+          {firstImage && (
+            <img
+              src={firstImage}
+              alt={project.title}
+              className="w-full h-auto object-cover rounded"
+            />
+          )}
+        </div>
 
-      <h3 className="mt-4 text-sm sm:text-base font-medium text-gray-900">
-        {project.title}
-      </h3>
-      <p className="text-[10px] uppercase tracking-wider text-gray-400">
-        {project.location}
-      </p>
-    </div>
-  );
-}
-
+        <h3 className="mt-4 text-sm sm:text-base font-medium text-gray-900">
+          {project.title}
+        </h3>
+        <p className="text-[10px] uppercase tracking-wider text-gray-400">
+          {project.location}
+        </p>
+      </div>
+    );
+  }
 }
 
 /**
@@ -420,6 +435,7 @@ export default function HorizontalScrollGalleryExample() {
   const [activeProjectId, setActiveProjectId] = React.useState(null);
   const [scrolledProjectId, setScrolledProjectId] = React.useState(null);
   const [selectedTypology, setSelectedTypology] = React.useState("ALL");
+  const [isMobileNav, setIsMobileNav] = React.useState(false);
   const containerRef = React.useRef(null);
   const projectRefs = React.useRef({});
 
@@ -433,7 +449,11 @@ export default function HorizontalScrollGalleryExample() {
     if (t.includes("installation")) return "Installation";
     if (t.includes("signag")) return "Signage";
     if (t.includes("landscape")) return "Landscape";
-    if (t.includes("experience") || t.includes("centre") || t.includes("center"))
+    if (
+      t.includes("experience") ||
+      t.includes("centre") ||
+      t.includes("center")
+    )
       return "Experience Centre";
     return "Experience Centre";
   }, []);
@@ -453,12 +473,182 @@ export default function HorizontalScrollGalleryExample() {
     return ["ALL", ...allCategories];
   }, []);
 
+  // Detect mobile for nav dropdown
+  React.useEffect(() => {
+    const check = () => setIsMobileNav(window.innerWidth <= 640);
+    if (typeof window !== "undefined") {
+      check();
+      window.addEventListener("resize", check);
+      return () => window.removeEventListener("resize", check);
+    }
+    return undefined;
+  }, []);
+
+  // Small icons for categories (keeps nav compact on mobile)
+  const getTypologyIcon = (typ) => {
+    const key = String(typ).toLowerCase();
+    const size = 16;
+    if (key.includes("resid"))
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <rect
+            x="3"
+            y="8"
+            width="18"
+            height="11"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            rx="1"
+          />
+          <path
+            d="M7 8V6a3 3 0 013-3h4a3 3 0 013 3v2"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    if (key.includes("office"))
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3 7h18v11a1 1 0 01-1 1H4a1 1 0 01-1-1V7z"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          <path
+            d="M7 7v-2a2 2 0 012-2h6a2 2 0 012 2v2"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    if (key.includes("retail"))
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M3 7h18"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <rect
+            x="4"
+            y="7"
+            width="16"
+            height="11"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            rx="1"
+          />
+        </svg>
+      );
+    if (key.includes("installation") || key.includes("experience"))
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <circle
+            cx="12"
+            cy="10"
+            r="3"
+            stroke="currentColor"
+            strokeWidth="1.5"
+          />
+          <path
+            d="M5 21c2-4 6-6 7-6s5 2 7 6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+        </svg>
+      );
+    if (key.includes("signag") || key.includes("signage"))
+      return (
+        <svg
+          width={size}
+          height={size}
+          viewBox="0 0 24 24"
+          fill="none"
+          xmlns="http://www.w3.org/2000/svg"
+        >
+          <path
+            d="M4 21v-13"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+          />
+          <rect
+            x="6"
+            y="5"
+            width="12"
+            height="6"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            rx="1"
+          />
+        </svg>
+      );
+    // default / landscape / others
+    return (
+      <svg
+        width={size}
+        height={size}
+        viewBox="0 0 24 24"
+        fill="none"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          d="M3 18h18"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+        />
+        <path
+          d="M4 6h16v8H4z"
+          stroke="currentColor"
+          strokeWidth="1.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        />
+      </svg>
+    );
+  };
+
   // Filter projects based on selected clustered typology
   const filteredProjects = React.useMemo(() => {
     if (!componentData) return [];
     if (selectedTypology === "ALL") return componentData;
     return componentData.filter(
-      (p) => mapToCategory(p.typology) === selectedTypology
+      (p) => mapToCategory(p.typology) === selectedTypology,
     );
   }, [selectedTypology, mapToCategory]);
 
@@ -479,7 +669,7 @@ export default function HorizontalScrollGalleryExample() {
         }
       }, 100);
     }
-    
+
     // // Scroll to center the clicked project
     // setTimeout(() => {
     //   const ref = projectRefs.current[projectKey];
@@ -490,14 +680,10 @@ export default function HorizontalScrollGalleryExample() {
   }, []);
 
   React.useEffect(() => {
-    console.log("componentData loaded:", componentData);
-    console.log("Number of projects:", componentData?.length);
-    if (componentData && componentData.length > 0) {
-      console.log("First project:", componentData[0]);
-    }
+    // Initialize with component data
   }, []);
 
-  // GSAP scroll animation - zoom out while scrolling, normal when stopped
+  // Scroll-based animation state management
   React.useEffect(() => {
     if (window.innerWidth < 1024) return;
     const container = containerRef.current;
@@ -507,22 +693,19 @@ export default function HorizontalScrollGalleryExample() {
     let isScrolling = false;
 
     const handleScroll = () => {
-      // Mark as scrolling and apply zoom-out effect
+      // Mark as scrolling
       if (!isScrolling) {
         isScrolling = true;
 
-        // Zoom out all projects while scrolling
+        // Apply scroll effect to all projects
         Object.entries(projectRefs.current).forEach(([, ref]) => {
-          if (!ref) return;
-
-          gsap.to(ref, {
-            scale: 0.75,
-            opacity: 0.5,
-            filter: "blur(3px)",
-            duration: 0.2,
-            ease: "power2.out",
-            transformOrigin: "center center",
-          });
+          if (!ref) {
+            return;
+          }
+          ref.style.transition = "none";
+          ref.style.transform = "scale(0.75)";
+          ref.style.opacity = "0.5";
+          ref.style.filter = "blur(3px)";
         });
       }
 
@@ -534,15 +717,13 @@ export default function HorizontalScrollGalleryExample() {
         isScrolling = false;
 
         Object.entries(projectRefs.current).forEach(([, ref]) => {
-          if (!ref) return;
-          gsap.to(ref, {
-            scale: 1,
-            opacity: 1,
-            filter: "blur(0px)",
-            duration: 0.4,
-            ease: "power2.out",
-            transformOrigin: "center center",
-          });
+          if (!ref) {
+            return;
+          }
+          ref.style.transition = "all 0.4s cubic-bezier(0.4, 0, 0.2, 1)";
+          ref.style.transform = "scale(1)";
+          ref.style.opacity = "1";
+          ref.style.filter = "blur(0px)";
         });
       }, 150);
     };
@@ -570,35 +751,77 @@ export default function HorizontalScrollGalleryExample() {
     >
       {/* Filter Navigation Bar */}
       <div className="sticky top-0 z-50 bg-white border-b border-gray-200">
-        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-12
-sm:px-6 lg:px-8">
-          <div className="flex items-center justify-center gap-6 py-4 overflow-x-auto scrollbar-hide">
-            {typologies.map((typology) => (
-              <button
-                key={typology}
-                onClick={() => setSelectedTypology(typology)}
-                className={`px-2 py-2 text-xs font-medium tracking-wider whitespace-nowrap transition-all duration-300 ${
-                  selectedTypology === typology
-                    ? "border-b-2 border-black text-black"
-                    : "text-gray-500 hover:text-gray-900"
-                }`}
-              >
-                {typology}
-              </button>
-            ))}
+        <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-12">
+          <div className="flex items-center justify-center gap-4 py-3 overflow-x-auto scrollbar-hide px-2">
+            {isMobileNav ? (
+              <div className="w-full px-2">
+                <label htmlFor="typology-select" className="sr-only">
+                  Select category
+                </label>
+                <select
+                  id="typology-select"
+                  value={selectedTypology}
+                  onChange={(e) => setSelectedTypology(e.target.value)}
+                  className="w-full rounded-md border px-3 py-2 text-sm bg-white"
+                >
+                  {typologies.map((t) => (
+                    <option key={t} value={t}>
+                      {t}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            ) : (
+              typologies.map((typology) => (
+                <button
+                  key={typology}
+                  onClick={() => setSelectedTypology(typology)}
+                  className={`flex items-center gap-2 px-3 py-2 min-w-[56px] rounded-full transition-all duration-200 whitespace-nowrap text-[11px] sm:text-xs font-medium ${
+                    selectedTypology === typology
+                      ? "bg-black text-white border border-black"
+                      : "bg-white text-gray-600 hover:bg-gray-50"
+                  }`}
+                  aria-pressed={selectedTypology === typology}
+                  aria-label={`Filter: ${typology}`}
+                >
+                  <span className="w-4 h-4 text-current flex-shrink-0">
+                    {getTypologyIcon(typology)}
+                  </span>
+                  <span className="truncate max-w-[8rem] hidden sm:inline">
+                    {typology}
+                  </span>
+                </button>
+              ))
+            )}
           </div>
         </div>
       </div>
 
       {/* Projects Grid */}
-      <div className="flex flex-col items-center pt-8 pb-16 px-3 sm:px-6 lg:px-12
-">
+      <div
+        className="flex flex-col items-center pt-8 pb-16 px-3 sm:px-6 lg:px-12
+"
+      >
         {filteredProjects.length > 0 ? (
           filteredProjects.map((project) => (
             <div
               key={project.key}
               ref={(el) => (projectRefs.current[project.key] = el)}
+              className="relative w-full"
             >
+              {activeProjectId === project.key && (
+                <button
+                  aria-label={`Close ${project.title}`}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActiveProjectId(null);
+                  }}
+                  className="absolute right-4 top-4 z-60 rounded-full border border-gray-200 bg-white/90 px-3 py-1 text-sm font-medium text-gray-800 shadow-md backdrop-blur hover:bg-white transition"
+                >
+                  ✕
+                </button>
+              )}
+
               <ProjectGalleryWrapper
                 project={project}
                 isActive={activeProjectId === project.key}

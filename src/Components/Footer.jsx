@@ -1,101 +1,47 @@
-import React, { useEffect, useRef } from "react";
-import { gsap } from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
+import React from "react";
+import { motion } from "framer-motion";
 
 const Footer = () => {
-  const footerRef = useRef(null);
-  const contentItemsRef = useRef([]);
+  // Framer Motion variants
+  const containerVariants = {
+    hidden: { opacity: 0 },
+    visible: {
+      opacity: 1,
+      transition: {
+        staggerChildren: 0.1,
+        delayChildren: 0.2,
+      },
+    },
+  };
 
-  useEffect(() => {
-    try {
-      if (typeof window !== "undefined" && ScrollTrigger) {
-        gsap.registerPlugin(ScrollTrigger);
-      }
-
-      // Refresh if ScrollTrigger is available
-      if (ScrollTrigger && typeof ScrollTrigger.refresh === "function") {
-        ScrollTrigger.refresh();
-      }
-
-      const ctx = gsap.context(() => {
-        // Check if elements exist before animating
-        if (footerRef.current && gsap) {
-          gsap.from(footerRef.current, {
-            y: 30,
-            opacity: 0,
-            duration: 0.8,
-            ease: "power3.out",
-            scrollTrigger: ScrollTrigger
-              ? {
-                  trigger: footerRef.current,
-                  start: "top bottom-=50",
-                  toggleActions: "play none none none",
-                  once: true, // Only animate once
-                }
-              : undefined,
-          });
-        }
-
-        // Stagger animate footer content items
-        const validItems = contentItemsRef.current.filter(
-          (item) => item !== null
-        );
-        if (validItems.length > 0) {
-          gsap.from(validItems, {
-            y: 20,
-            opacity: 0,
-            duration: 0.6,
-            stagger: 0.1,
-            ease: "power2.out",
-            scrollTrigger: ScrollTrigger
-              ? {
-                  trigger: footerRef.current,
-                  start: "top bottom-=50",
-                  toggleActions: "play none none none",
-                  once: true, // Only animate once
-                }
-              : undefined,
-          });
-        }
-      });
-
-      return () => {
-        try {
-          ctx.revert();
-        } catch (e) {
-          // ignore
-        }
-        try {
-          if (ScrollTrigger && typeof ScrollTrigger.getAll === "function") {
-            ScrollTrigger.getAll().forEach((trigger) => trigger.kill());
-          }
-        } catch (e) {
-          // ignore
-        }
-      };
-    } catch (err) {
-      // Prevent animation errors from breaking the footer render
-      console.error("Footer animation error:", err);
-    }
-  }, []);
-
-  const addItemToRef = (el, index) => {
-    if (el) {
-      contentItemsRef.current[index] = el;
-    }
+  const itemVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: { duration: 0.6, ease: "easeOut" },
+    },
   };
 
   return (
-    <footer
-      ref={footerRef}
+    <motion.footer
       className="bg-white border-t border-gray-200 py-12 sm:py-16 lg:py-20 mt-auto font-sans"
-      style={{ opacity: 1 }}
+      initial={{ y: 30, opacity: 0 }}
+      whileInView={{ y: 0, opacity: 1 }}
+      transition={{ duration: 0.8, ease: "easeOut" }}
+      viewport={{ once: true, margin: "-100px" }}
     >
       <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-12">
         {/* Main Footer Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-12">
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10 lg:gap-12 mb-12"
+          variants={containerVariants}
+          initial="hidden"
+          whileInView="visible"
+          viewport={{ once: true, margin: "-100px" }}
+        >
           {/* About Section */}
-          <div ref={(el) => addItemToRef(el, 0)} className="space-y-4">
+          <motion.div className="space-y-4" variants={itemVariants}>
             <h3 className="text-sm font-bold text-black tracking-wider">
               POROUS BEING
             </h3>
@@ -109,10 +55,10 @@ const Footer = () => {
                 POROUS
               </span>
             </div>
-          </div>
+          </motion.div>
 
           {/* Contact Section */}
-          <div ref={(el) => addItemToRef(el, 1)} className="space-y-4">
+          <motion.div className="space-y-4" variants={itemVariants}>
             <h3 className="text-sm font-bold text-black tracking-wider">
               CONTACT
             </h3>
@@ -132,10 +78,10 @@ const Footer = () => {
                 </a>
               </p>
             </div>
-          </div>
+          </motion.div>
 
           {/* Quick Links Section */}
-          <div ref={(el) => addItemToRef(el, 2)} className="space-y-4">
+          <motion.div className="space-y-4" variants={itemVariants}>
             <h3 className="text-sm font-bold text-black tracking-wider">
               LINKS
             </h3>
@@ -162,10 +108,10 @@ const Footer = () => {
                 Team
               </a>
             </div>
-          </div>
+          </motion.div>
 
           {/* Social & Legal Section */}
-          <div ref={(el) => addItemToRef(el, 3)} className="space-y-4">
+          <motion.div className="space-y-4" variants={itemVariants}>
             <h3 className="text-sm font-bold text-black tracking-wider">
               CONNECT
             </h3>
@@ -185,11 +131,17 @@ const Footer = () => {
                 Privacy Policy
               </a>
             </div>
-          </div>
-        </div>
+          </motion.div>
+        </motion.div>
 
         {/* Bottom Bar */}
-        <div className="border-t border-gray-200 pt-8">
+        <motion.div
+          className="border-t border-gray-200 pt-8"
+          initial={{ opacity: 0 }}
+          whileInView={{ opacity: 1 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          viewport={{ once: true, margin: "-100px" }}
+        >
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 text-xs text-gray-500">
             <p>
               &copy; {new Date().getFullYear()} Porous Being. All rights
@@ -197,9 +149,9 @@ const Footer = () => {
             </p>
             <p>Designed with purpose, built with passion.</p>
           </div>
-        </div>
+        </motion.div>
       </div>
-    </footer>
+    </motion.footer>
   );
 };
 

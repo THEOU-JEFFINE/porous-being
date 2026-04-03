@@ -1,14 +1,14 @@
 {
   "components/Pages/Projects.jsx -> ../HorizontalScrollGalleryExample": {
-    "id": 1651,
+    "id": "components/Pages/Projects.jsx -> ../HorizontalScrollGalleryExample",
     "files": [
-      "static/chunks/651.5fdd9b3035f57553.js"
+      "static/chunks/_app-pages-browser_components_HorizontalScrollGalleryExample_jsx.js"
     ]
   },
   "lib/hooks/useLenis.js -> lenis": {
-    "id": 2691,
+    "id": "lib/hooks/useLenis.js -> lenis",
     "files": [
-      "static/chunks/691.01588e2c54f5c06b.js"
+      "static/chunks/_app-pages-browser_node_modules_lenis_dist_lenis_mjs.js"
     ]
   }
 }

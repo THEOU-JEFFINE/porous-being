@@ -94,14 +94,11 @@ export default function Projects({ componentData = [] }) {
       "@type": "WebPage",
       name: "Projects — Porous Being | Architecture & Design",
       description: "Explore our portfolio of architectural and design projects",
-      url:
-        typeof window !== "undefined"
-          ? window.location.origin + "/projects"
-          : "",
+      url: "https://porous-being.com/projects",
       publisher: {
         "@type": "Organization",
         name: "Porous Being",
-        url: typeof window !== "undefined" ? window.location.origin : "",
+        url: "https://porous-being.com",
       },
       mainEntity: {
         "@type": "ItemList",
@@ -113,8 +110,7 @@ export default function Projects({ componentData = [] }) {
             name: p.title,
             description: p.description || "",
             url:
-              (typeof window !== "undefined" ? window.location.origin : "") +
-              "/projects#" +
+              "https://porous-being.com/projects#" +
               (p.key || p.title?.toLowerCase().replace(/\s+/g, "-")),
             image: Array.isArray(p.images) ? p.images[0] : p.images,
           },
@@ -134,17 +130,13 @@ export default function Projects({ componentData = [] }) {
           "@type": "ListItem",
           position: 1,
           name: "Home",
-          item:
-            typeof window !== "undefined" ? window.location.origin + "/" : "",
+          item: "https://porous-being.com/",
         },
         {
           "@type": "ListItem",
           position: 2,
           name: "Projects",
-          item:
-            typeof window !== "undefined"
-              ? window.location.origin + "/projects"
-              : "",
+          item: "https://porous-being.com/projects",
         },
       ],
     }),

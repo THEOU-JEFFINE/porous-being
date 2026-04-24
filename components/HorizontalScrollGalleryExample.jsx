@@ -827,14 +827,17 @@ export default function HorizontalScrollGalleryExample({ componentData = [] }) {
                   onClick={() => setSelectedTypology(typology)}
                   className={`flex items-center gap-2 px-3 sm:px-4 py-1.5 transition-all duration-200 whitespace-nowrap text-[10px] sm:text-xs font-medium ${
                     selectedTypology === typology
-                      ? "bg-black text-white rounded-none"
-                      : "text-gray-600 hover:text-black"
+                      ? "text-black"
+                      : "text-gray-400"
                   }`}
                   whileHover={{ y: -3, scale: 1.05 }}
                   transition={{ type: "spring", stiffness: 400, damping: 10 }}
                   aria-pressed={selectedTypology === typology}
                   aria-label={`Filter: ${typology}`}
                 >
+                  {selectedTypology === typology && (
+                    <span className="w-2 h-2 bg-black flex-shrink-0"></span>
+                  )}
                   <span className="w-4 h-4 text-current flex-shrink-0">
                     {getTypologyIcon(typology)}
                   </span>

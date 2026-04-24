@@ -3,8 +3,17 @@
 import React, { useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, easeOut } from "framer-motion";
+import { useLenis } from "@/lib/hooks/useLenis";
 
 const News = React.memo(() => {
+  // Initialize smooth scrolling
+  useLenis();
+  
+  // Scroll to top on component mount
+  React.useEffect(() => {
+    window.scrollTo(0, 0);
+  }, []);
+  
   const newsItems = [];
 
   // Framer Motion variants

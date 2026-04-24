@@ -3,15 +3,18 @@
 import React, { useRef, useEffect, useMemo } from "react";
 import { Helmet } from "react-helmet-async";
 import { motion, easeOut } from "framer-motion";
+import { useLenis } from "@/lib/hooks/useLenis";
 
 const About = React.memo(() => {
+  // Initialize smooth scrolling
+  useLenis();
   const titleRef = useRef(null);
   const leftColumnRef = useRef(null);
   const mainImageRef = useRef(null);
 
   // Scroll to top on component mount
   useEffect(() => {
-    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo(0, 0);
   }, []);
 
   // Memoize SEO structured data
@@ -70,7 +73,7 @@ const About = React.memo(() => {
         </script>
       </Helmet>
 
-      <div className="min-h-screen px-4 md:px-8 lg:px-16 xl:px-24">
+      <div className="min-h-screen px-4 md:px-8 lg:px-16 xl:px-24 pb-12 sm:pb-16 lg:pb-20 xl:pb-24">
         {/* Main Content */}
         <div className="max-w-5xl mx-auto">
           <motion.h1
@@ -275,7 +278,7 @@ const About = React.memo(() => {
                       variants={itemVariants}
                       className="flex items-start"
                     >
-                      <span className="w-2 h-2 bg-black rounded-full mt-2 mr-3 flex-shrink-0"></span>
+                      <span className="w-2 h-2 bg-black mt-2 mr-3 flex-shrink-0"></span>
                       {service}
                     </motion.li>
                   ))}

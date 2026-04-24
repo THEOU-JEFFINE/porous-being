@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from 'next';
-import { Providers } from './providers';
 import Navbar from '@/components/Navbar';
 import Footer from '@/components/Footer';
 import '../styles/globals.css';
@@ -73,15 +72,13 @@ export default function RootLayout({
         </script>
       </head>
       <body>
-        <Providers>
-          <div className="flex flex-col min-h-screen">
-            <Navbar />
-            <main className="flex-1">
-              {children}
-            </main>
-            <Footer />
-          </div>
-        </Providers>
+        <div className="flex flex-col min-h-screen">
+          <Navbar />
+          <main className="flex-1">
+            {children}
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

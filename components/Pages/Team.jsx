@@ -3,7 +3,11 @@
 import React, { useEffect, useRef, useMemo, useState } from "react";
 import { Helmet } from "react-helmet-async";
 import { AnimatePresence, motion, easeOut } from "framer-motion";
+import { useLenis } from "@/lib/hooks/useLenis";
+
 const Team = React.memo(() => {
+  // Initialize smooth scrolling
+  useLenis();
   const people = useMemo(
     () => [
       {
@@ -29,7 +33,7 @@ const Team = React.memo(() => {
 
   // Scroll to top on component mount
   useEffect(() => {
-    document.documentElement.scrollTo({ top: 0, behavior: "smooth" });
+    window.scrollTo(0, 0);
   }, []);
 
   // Memoize SEO structured data
@@ -81,20 +85,20 @@ const Team = React.memo(() => {
         </script>
       </Helmet>
 
-      <div className="flex flex-col lg:flex-row min-h-screen px-4 sm:px-6 lg:px-12 xl:px-24 pb-12 sm:pb-16 lg:pb-20 xl:pb-24">
+      <div className="min-h-screen px-4 md:px-8 lg:px-16 xl:px-24 pb-12 sm:pb-16 lg:pb-20 xl:pb-24">
         {/* Main Content */}
-        <div className="flex-1 max-w-6xl">
+        <div className="max-w-5xl mx-auto">
           <motion.h1
             ref={titleRef}
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ duration: 1, ease: easeOut }}
-            className="mt-8 sm:mt-12 text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 sm:mb-10 lg:mb-12 xl:mb-16"
+            className="mt-12 text-5xl md:text-5xl lg:text-6xl xl:text-7xl font-normal mb-8 lg:mb-12 xl:mb-16"
           >
             PEOPLE
           </motion.h1>
 
-          <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-16 xl:gap-20 pr-0 sm:pr-4 lg:pr-8">
+          <div className="flex flex-col lg:flex-row gap-6 sm:gap-8 lg:gap-16 xl:gap-20">
             {/* CENTER PEOPLE LIST */}
             <div className="flex-1 w-full lg:max-w-md">
               <div

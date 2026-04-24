@@ -64,7 +64,7 @@ const Navbar = React.memo(() => {
 
   return (
     <motion.header
-      className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur border-b border-gray-200"
+      className="sticky top-0 z-50 w-full bg-white/70 backdrop-blur"
       style={{
         contain: "layout style paint",
         backfaceVisibility: "hidden",
@@ -74,14 +74,14 @@ const Navbar = React.memo(() => {
       animate="visible"
       variants={headerVariants}
     >
-      <div className="flex items-center justify-between px-2 py-0.5 sm:px-3 md:px-5 lg:px-6 lg:py-1 relative">
+      <div className="flex items-center justify-between px-2 py-2 sm:px-3 md:px-5 lg:px-6 lg:py-2 relative">
         {/* Logo */}
         <div className="flex items-center flex-shrink-0 mr-2 sm:mr-4">
           <Link href="/">
             <img
               src="/assets/Porous_Logo.png"
               alt="Logo"
-              className="w-10 h-10 sm:w-11 sm:h-11 md:w-12 md:h-12 object-contain cursor-pointer"
+              className="w-8 h-8 sm:w-9 sm:h-9 md:w-10 md:h-10 object-contain cursor-pointer"
             />
           </Link>
         </div>
@@ -102,7 +102,7 @@ const Navbar = React.memo(() => {
             >
               <Link
                 href={link.href}
-                className={`text-xs sm:text-xs md:text-sm transition-colors block px-0.5 sm:px-1.5 py-0.5 sm:py-0.5 ${
+                className={`text-xs sm:text-xs md:text-sm transition-colors block px-0.5 sm:px-1.5 py-0 ${
                   isActive(link.href)
                     ? "font-medium text-black border-b border-black"
                     : "font-light text-gray-600 hover:text-black"
@@ -140,7 +140,7 @@ const Navbar = React.memo(() => {
             animate={{ opacity: 1, height: "auto" }}
             exit={{ opacity: 0, height: 0 }}
             transition={{ duration: 0.3 }}
-            className="md:hidden border-t border-gray-200 bg-white"
+            className="md:hidden bg-white"
           >
             <div className="flex flex-col px-2 py-1 space-y-0.5">
               {navLinks.map((link) => (

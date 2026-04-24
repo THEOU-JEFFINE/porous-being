@@ -37,7 +37,7 @@ const nextConfig = {
   // Environment variables
   env: {
     NEXT_PUBLIC_SITE_URL:
-      process.env.NEXT_PUBLIC_SITE_URL || "https://porous-being.com",
+      process.env.NEXT_PUBLIC_SITE_URL || "https://porousbeing.com",
   },
 
   // Webpack configuration for optimization

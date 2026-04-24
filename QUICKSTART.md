@@ -116,7 +116,7 @@ npm run export         # Build and export static site (if needed)
 ### Environment Variables
 Create a `.env.local` file:
 ```bash
-NEXT_PUBLIC_SITE_URL=https://porous-being.com
+NEXT_PUBLIC_SITE_URL=https://porousbeing.com
 ```
 
 ### Customization

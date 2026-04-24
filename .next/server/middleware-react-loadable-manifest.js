@@ -1,1 +1,0 @@
-self.__REACT_LOADABLE_MANIFEST='{"components/Pages/Projects.jsx -> ../HorizontalScrollGalleryExample":{"id":2442,"files":["static/chunks/442.2cc0bdf4f59f9abf.js"]},"lib/hooks/useLenis.js -> lenis":{"id":2691,"files":["static/chunks/691.01588e2c54f5c06b.js"]}}';
